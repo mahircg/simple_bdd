@@ -34,6 +34,9 @@ class Fraction {
 
 private:
 
+int n, d;
+int gcd(int a, int b);
+
 
 public:
 	/**
