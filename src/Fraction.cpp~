@@ -7,14 +7,8 @@
 
 #include "Fraction.hpp" 
 
-Fraction::Fraction(int n, int d) throw (DivisionByZeroException) :
-		n(n / gcd(n, d)), d(d / gcd(n, d)) {
-	if (d == 0)
-		throw DivisionByZeroException();
-}
+Fraction::Fraction(int n, int d) throw (DivisionByZeroException) {
 
-int Fraction::gcd(int a, int b) {
-	return b == 0 ? a : gcd(b, a % b);
 }
 
 
@@ -23,11 +17,11 @@ Fraction& Fraction::operator *=(const Fraction& rhs) {
 }
 
 int Fraction::num() const {
-	return n;
+	return 0;
 }
 
 int Fraction::den() const {
-	return d;
+	return 0;
 }
 
 Fraction operator *(const Fraction& lhs, const Fraction& rhs) {
