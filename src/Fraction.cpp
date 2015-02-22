@@ -35,7 +35,7 @@ Fraction operator *(const Fraction& lhs, const Fraction& rhs) {
 }
 
 bool Fraction::operator ==(const Fraction& rhs) const {
-	return false;
+	return this->num() == rhs.num() && this->den() == rhs.den();
 }
 
 bool Fraction::operator !=(const Fraction& rhs) const {
