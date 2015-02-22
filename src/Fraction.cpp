@@ -43,7 +43,7 @@ bool Fraction::operator ==(const Fraction& rhs) const {
 }
 
 bool Fraction::operator !=(const Fraction& rhs) const {
-	return false;
+	return !(*this == rhs);
 }
 
 ostream& operator <<(ostream& out, const Fraction& rhs) {
