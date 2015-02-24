@@ -1,0 +1,7 @@
+# import arguments passed on: environment and library
+Import('env','library')
+
+# create object for the unit tests
+# this object will be linked in order to produce the executable for testing purposes
+env.Object(source = ['ManagerTest.cpp'], LIBS=[library,'cppunit'])
+

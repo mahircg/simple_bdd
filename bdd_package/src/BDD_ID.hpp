@@ -38,8 +38,10 @@ class BDD_ID : public Node
 	friend ostream& operator<<(ostream&,const BDD_ID&);
 private:
 	class Node *low,*high;
-	string name;
+	string variable;
 public:
+	bool operator==(const BDD_ID&) const;
+	bool operator!=(const BDD_ID&) const;
 	BDD_ID(string,unsigned);
 	BDD_ID(string,unsigned,Node*,Node*);
 	BDD_ID(string,unsigned,Node&,Node&);

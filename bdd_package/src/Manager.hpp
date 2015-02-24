@@ -6,19 +6,22 @@
  * This class provides following functionalities
  * * Initialization and assignment of new variables/nodes
  * * Addition of variables/nodes into a BDD
+ */
 
 #ifndef HPP_MANAGER
 #define HPP_MANAGER
 
 #include "BDD_ID.hpp"
 #include<set>
+#include<unordered_map>
 
 using namespace std;
 
 class Manager
 {
 private:
-	//Not much here yet
+	unordered_map<BDD_ID,unsigned> uniqueTable;		//Equality operator of BDD_ID overloaded such that key for a BDD object is its variable,low node id and high node id.
+	unsigned nextID;
 public:
 	Manager();
 	~Manager();
