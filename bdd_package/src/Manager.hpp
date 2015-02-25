@@ -17,18 +17,21 @@
 
 using namespace std;
 
-class Manager
+typedef unordered_map<BDD_ID,unsigned> uniqueTableType;
+
+class Manager 
 {
 private:
-	unordered_map<BDD_ID,unsigned> uniqueTable;		//Equality operator of BDD_ID overloaded such that key for a BDD object is its variable,low node id and high node id.
+	uniqueTableType uniqueTable;		//Equality operator of BDD_ID overloaded such that key for a BDD object is its variable,low node id and high node id.
 	unsigned nextID;
 public:
 	Manager();
 	~Manager();
 	BDD_ID createVar(const string&);
-	bool True(const BDD_ID&);
-	bool false(const BDD_ID&);
+	BDD_ID True() const;
+	BDD_ID False() const;
 	bool isVariable(const BDD_ID&);
+	bool isConstant(const BDD_ID&);
 	size_t topVar(const BDD_ID);
 	BDD_ID coFactorTrue(const BDD_ID,const BDD_ID);
 	BDD_ID coFactorFalse(const BDD_ID,const BDD_ID);

@@ -47,5 +47,6 @@ public:
 	BDD_ID(string,unsigned,Node&,Node&);
 	void setLow(Node&);
 	void setHigh(Node&);
+	operator string() const;
 };
 #endif

@@ -12,7 +12,7 @@ bool Node::operator!=(const BDD_ID& rhs) const
 }
 
 
-Node::operator std::string() const
+Node::operator string() const
 {
 	return to_string(static_cast<long long>(id));
 }
@@ -39,7 +39,10 @@ ostream& operator<<(ostream& osObject,const BDD_ID &bddObj)
 
 Node::Node(unsigned id):id(id){};
 
-
+BDD_ID::operator string()
+{
+	return variable;
+}
 BDD_ID::BDD_ID(string variable,unsigned id):Node(id), variable(variable) {};
 
 BDD_ID::BDD_ID(string variable,unsigned id,Node* t,Node* e):Node(id), variable(variable) 
