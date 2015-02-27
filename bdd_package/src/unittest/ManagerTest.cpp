@@ -4,7 +4,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION(ManagerTest);
 
 void ManagerTest::setUp(void)
 {
-	//not much yet
+  man=new Manager();
 }
 
 void ManagerTest::tearDown(void)
@@ -19,31 +19,31 @@ void ManagerTest::constructorTest(void)
 
 void ManagerTest::createVarTest(void)
 {
-	BDD_ID a=createVar("x");
-	BDD_ID b=createVar("y");
-	CPPUNIT_ASSERT_EQUAL(a.getID() != b.getID()); //no two variables have the same id
+	BDD_ID a = man->createVar("x");
+	BDD_ID b = man->createVar("y");
+	CPPUNIT_ASSERT(a.getID() != b.getID()); //no two variables have the same id
 	//more tests will come here
 }
 
 void ManagerTest::trueTest(void)
 {
-	BDD_ID t=True();
-	CPPUNIT_ASSERT_EQUAL(t.getID()==2);			//ID for terminal node TRUE
+  BDD_ID t=man->True();
+  CPPUNIT_ASSERT_EQUAL(t.getID(),(unsigned)2);			//ID for terminal node TRUE
 	
 }
 
 void ManagerTest::falseTest(void)
 {
-	BDD_ID e=False();
-	CPPUNIT_ASSERT_EQUAL(t.getID()==1);			//ID for terminal node FALSE
+  BDD_ID e=man->False();
+  CPPUNIT_ASSERT_EQUAL(e.getID(),(unsigned)1);			//ID for terminal node FALSE
 }
 
 void ManagerTest::isConstantTest(void)
 {
-	BDD_ID t=True();
-	BDD_ID e=False();
-	CPPUNIT_ASSERT_EQUAL(isConstant(t)==true);
-	CPPUNIT_ASSERT_EQUAL(isConstant(e)==false);
+	BDD_ID t=man->True();
+	BDD_ID e=man->False();
+	CPPUNIT_ASSERT_EQUAL(man->isConstant(t),true);
+	CPPUNIT_ASSERT_EQUAL(man->isConstant(e),false);
 }
 
 void ManagerTest::isVariableTest(void)
@@ -112,6 +112,11 @@ void ManagerTest::nor2Test(void)
 }
 
 void ManagerTest::getTopVarNameTest(void)
+{
+	
+}
+
+void ManagerTest::findNodesTest(void)
 {
 	
 }

@@ -5,29 +5,32 @@ using namespace std;
 
 Manager::Manager()
 {
-	uniqueTable=new uniqueTableType();
-	nextID=3;
+      
+	nextID=2;
 }
 
 Manager::~Manager()
 {
-	delete uniqueTable;
+        
 }
 
 BDD_ID Manager::createVar(const string& varName)
 {
-	return BDD_ID(varName,nextID,True(),False());
-	nextID+=1;
+  nextID+=1;
+  
+  return BDD_ID(varName,nextID,True(),False());
+	
 }
 
-BDD_ID* Manager::True()
+BDD_ID Manager::True() const
 {
-	return new Node(2);
+  
+  return BDD_ID(" ",2);
 }
 
-BDD_ID* Manager::False()
+BDD_ID Manager::False() const
 {
-	return new Node(1);
+  return BDD_ID(" ",1);
 }
 
 bool Manager::isVariable(const BDD_ID& node)
@@ -47,57 +50,57 @@ size_t Manager::topVar(const BDD_ID& node)
 
 BDD_ID Manager::coFactorTrue(const BDD_ID f,const BDD_ID x)
 {
-	return Node(1);
+  return BDD_ID(" ",1);
 }
 
 BDD_ID Manager::coFactorFalse(const BDD_ID f,const BDD_ID x)
 {
-	return Node(1);
+	return BDD_ID(" ",1);
 }
 
 BDD_ID Manager::coFactorTrue(const BDD_ID f)
 {
-	return Node(1);
+        return BDD_ID(" ",1);
 }
 
 BDD_ID Manager::coFactorFalse(const BDD_ID f)
 {
-	return Node(1);
+        return BDD_ID(" ",1);
 }
 
 BDD_ID Manager::ite(const BDD_ID f,const BDD_ID g,const BDD_ID h)
 {
-	return Node(1);
+        return BDD_ID(" ",1);
 }
 
 BDD_ID Manager::and2(const BDD_ID f,const BDD_ID g)
 {
-	return Node(1);
+        return BDD_ID(" ",1);
 }
 
 BDD_ID Manager::or2(const BDD_ID f,const BDD_ID g)
 {
-	return Node(1);
+        return BDD_ID(" ",1);
 }
 
 BDD_ID Manager::xor2(const BDD_ID f,const BDD_ID g)
 {
-	return Node(1);
+       return BDD_ID(" ",1);
 }
 
 BDD_ID Manager::nand2(const BDD_ID f,const BDD_ID g)
 {
-	return Node(1);
+	return BDD_ID(" ",1);
 }
 
 BDD_ID Manager::nor2(const BDD_ID f,const BDD_ID g)
 {
-	return Node(1);
+        return BDD_ID(" ",1);
 }
 
 BDD_ID Manager::neg(const BDD_ID f)
 {
-	return Node(1);
+	return BDD_ID(" ",1);
 }
 
 string Manager::getTopVarName(const BDD_ID& f)

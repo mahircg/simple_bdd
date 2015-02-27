@@ -4,27 +4,9 @@
 #include<iostream>
 #include<string>
 
+
 using namespace std;
 
-
-
-
-/**
- * \class Node 
- * \brief Base class for DAG node
- * 
- * A node might be either a variable or a constant(such as terminal or leaf node)
- */
-class Node
-{
-protected:
-	unsigned id;
-public:
-	Node(unsigned);	
-	void setID(unsigned);
-	unsigned getID();
-	virtual operator string() const;
-};
 
 
 /**
@@ -33,20 +15,36 @@ public:
  * 
  * Each node(except leaves) has its successors which are either variables or terminal nodes.
  */
-class BDD_ID : public Node
+class BDD_ID 
 {
 	friend ostream& operator<<(ostream&,const BDD_ID&);
 private:
-	class Node *low,*high;
+	class BDD_ID *low,*high;
 	string variable;
+        unsigned id;
 public:
 	bool operator==(const BDD_ID&) const;
-	bool operator!=(const BDD_ID&) const;
-	BDD_ID(string,unsigned);
-	BDD_ID(string,unsigned,Node*,Node*);
-	BDD_ID(string,unsigned,Node&,Node&);
-	void setLow(Node&);
-	void setHigh(Node&);
+        BDD_ID(const BDD_ID&);
+	BDD_ID(const string,unsigned);
+	BDD_ID(const string,unsigned,BDD_ID*,BDD_ID*);
+	BDD_ID(const string,unsigned,BDD_ID const&,BDD_ID const&);
+	void setLow(BDD_ID&);
+	void setHigh(BDD_ID&);
+        unsigned getID(void) const;
+        void setID(unsigned);
+        BDD_ID* getLow(void) const;
+        BDD_ID* getHigh(void) const; 
 	operator string() const;
 };
+
+class BDD_Hash
+{
+   size_t operator() (const BDD_ID& bdd_id) const
+    {
+      return ((hash<unsigned>()(static_cast<int>(((string)bdd_id)[0]))) + (hash<unsigned>()(bdd_id.getLow()->getID())) + (hash<unsigned>()(bdd_id.getHigh()->getID())));
+    }
+};
+
+
+
 #endif

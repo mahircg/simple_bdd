@@ -1,28 +1,28 @@
 #include "BDD_ID.hpp"
 
+using namespace std;
 
-bool Node::operator==(const BDD_ID& rhs) const
+
+
+
+
+bool BDD_ID::operator==(const BDD_ID& rhs) const
 {
-	return (this->variable==rhs->variable) && (this->left->id==rhs->left->id) && (this->right->id==rhs->right->id);
+  return (this->variable==rhs.variable) && (this->low->id==rhs.low->id) && (this->high->id==rhs.high->id);
 }
 
-bool Node::operator!=(const BDD_ID& rhs) const
+
+BDD_ID::operator string() const
 {
-	return !(*this==rhs);
+	return variable;
 }
 
-
-Node::operator string() const
-{
-	return to_string(static_cast<long long>(id));
-}
-
-void Node::setID(unsigned id)
+void BDD_ID::setID(unsigned id)
 {
 	this->id = id;
 }
 
-unsigned Node::getID()
+unsigned BDD_ID::getID() const
 {
 	return id;
 }
@@ -35,35 +35,52 @@ ostream& operator<<(ostream& osObject,const BDD_ID &bddObj)
 	return osObject;
 }
 
-
-
-Node::Node(unsigned id):id(id){};
-
-BDD_ID::operator string()
+BDD_ID::BDD_ID(const BDD_ID& rhs)
 {
-	return variable;
+  this->id = rhs.id;
+  this->variable=rhs.variable;
+  *(this->low)=*(rhs.low);
+  *(this->high)=*(rhs.high);
 }
-BDD_ID::BDD_ID(string variable,unsigned id):Node(id), variable(variable) {};
 
-BDD_ID::BDD_ID(string variable,unsigned id,Node* t,Node* e):Node(id), variable(variable) 
+
+
+BDD_ID* BDD_ID::getLow() const
+{
+  return low;
+}
+
+BDD_ID* BDD_ID::getHigh() const
+{
+  return high;
+}
+
+
+BDD_ID::BDD_ID(const string variable,unsigned id):id(id), variable(variable) 
+{
+  low=NULL;
+  high=NULL;
+}
+
+BDD_ID::BDD_ID(const string variable,unsigned id,BDD_ID* t,BDD_ID* e):id(id), variable(variable) 
 {
 	low=e;
 	high=t;
 }
 
 
-BDD_ID::BDD_ID(string variable,unsigned id,Node& t,Node& e):Node(id), variable(variable) 
+BDD_ID::BDD_ID(const string variable,unsigned id,BDD_ID const& t,BDD_ID const& e):id(id), variable(variable) 
 {
-	low=&e;
-	high=&t;
+	*low=e;
+	*high=t;
 }
 
-void BDD_ID::setLow(class Node& e)
+void BDD_ID::setLow(class BDD_ID& e)
 {
-	low=&e;
+	*low=e;
 }
 
-void BDD_ID::setHigh(class Node& t)
+void BDD_ID::setHigh(class BDD_ID& t)
 {
-	high=&t;
+	*high=t;
 }
