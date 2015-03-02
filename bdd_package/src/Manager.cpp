@@ -35,7 +35,7 @@ BDD_ID Manager::False() const
 
 bool Manager::isVariable(const BDD_ID& node)
 {
-	return (node.getID()==1 || node.getID()==2);
+	return (node.getID()!=1 || node.getID()!=2);
 }
 
 bool Manager::isConstant(const BDD_ID& node)
@@ -43,29 +43,83 @@ bool Manager::isConstant(const BDD_ID& node)
 	return !isVariable(node);
 }
 
-size_t Manager::topVar(const BDD_ID& node)
+size_t Manager::topVar(const BDD_ID& node) // Root Node Id
 {
-	return 1;
+	return node.getID();
 }
 
-BDD_ID Manager::coFactorTrue(const BDD_ID f,const BDD_ID x)
+BDD_ID Manager::coFactorTrue(const BDD_ID f,const BDD_ID g)
 {
-  return BDD_ID(" ",1);
+	if (f.getID()==1 || g.getID()==1){
+		return 	False();
+	}
+	if (f.getID()==2 || g.getID()==2){
+		return 	f;
+	}
+	if (coFactorFalse(g) == False()){
+		return coFactorTrue(coFactorTrue(f),coFactorTrue(g));	
+	}
+	if (coFactorTrue(g) == False()){
+		return coFactorTrue(coFactorFalse(f),coFactorFalse(g));	
+	}
+	BDD_ID t = coFactorTrue(coFactorTrue(f),coFactorTrue(g));
+	BDD_ID e = coFactorTrue(coFactorFalse(f),coFactorFalse(g));
+	if (t == e){
+		return t;	
+	}
+	/* Find Or Create Node to be Implemented -> Unique Table*/
+	
 }
 
-BDD_ID Manager::coFactorFalse(const BDD_ID f,const BDD_ID x)
+BDD_ID Manager::coFactorFalse(const BDD_ID f,const BDD_ID g)
 {
-	return BDD_ID(" ",1);
+	if (f.getID()==1 || g.getID()==1){
+		return 	f;
+	}
+	if (f.getID()==2 || g.getID()==2){
+		return 	True();
+	}
+	if (coFactorFalse(g) == True()){
+		return coFactorFalse(coFactorTrue(f),coFactorTrue(g));	
+	}
+	if (coFactorTrue(g) == False()){
+		return coFactorFalse(coFactorFalse(f),coFactorFalse(g));	
+	}
+	BDD_ID t = coFactorFalse(coFactorTrue(f),coFactorTrue(g));
+	BDD_ID e = coFactorFalse(coFactorFalse(f),coFactorFalse(g));
+	if (t == e){
+		return t;	
+	}
+	/* Find Or Create Node to be Implemented -> Unique Table*/
 }
 
-BDD_ID Manager::coFactorTrue(const BDD_ID f)
+BDD_ID Manager::coFactorTrue(const BDD_ID f) // T CoFactor of f
 {
-        return BDD_ID(" ",1);
+	if (f.getID()==1){
+		return False();
+	}
+
+	if (f.getLow().getID() == f.getHigh().getID() == f.getID()){
+		return f;
+	}
+	if (f.getID()==2){
+		return f;
+	}
+	return f.getHigh();
 }
 
-BDD_ID Manager::coFactorFalse(const BDD_ID f)
+BDD_ID Manager::coFactorFalse(const BDD_ID f) // E CoFactor of f
 {
-        return BDD_ID(" ",1);
+	if (f.getID()==2){
+		return True();
+	}
+	if (f.getLow().getID() == f.getHigh().getID() == f.getID()){
+		return f;
+	}
+	if (f.getID()==1){
+		return f;
+	}
+	return f.getLow();
 }
 
 BDD_ID Manager::ite(const BDD_ID f,const BDD_ID g,const BDD_ID h)
