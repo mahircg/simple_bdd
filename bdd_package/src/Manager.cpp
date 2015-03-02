@@ -67,7 +67,7 @@ BDD_ID Manager::coFactorTrue(const BDD_ID f,const BDD_ID g)
 	if (t == e){
 		return t;	
 	}
-	/* Find Or Create Node to be Implemented -> Unique Table*/
+	/* TODO: Find Or Create Node to be Implemented -> Unique Table*/
 	
 }
 
@@ -90,7 +90,7 @@ BDD_ID Manager::coFactorFalse(const BDD_ID f,const BDD_ID g)
 	if (t == e){
 		return t;	
 	}
-	/* Find Or Create Node to be Implemented -> Unique Table*/
+	/* TODO: Find Or Create Node to be Implemented -> Unique Table*/
 }
 
 BDD_ID Manager::coFactorTrue(const BDD_ID f) // T CoFactor of f
@@ -99,13 +99,13 @@ BDD_ID Manager::coFactorTrue(const BDD_ID f) // T CoFactor of f
 		return False();
 	}
 
-	if (f.getLow().getID() == f.getHigh().getID() == f.getID()){
+	else if ((f.getLow())->getID() == (f.getHigh())->getID() == f.getID()){
 		return f;
 	}
-	if (f.getID()==2){
+	else if (f.getID()==2){
 		return f;
 	}
-	return f.getHigh();
+	return *f.getHigh();
 }
 
 BDD_ID Manager::coFactorFalse(const BDD_ID f) // E CoFactor of f
@@ -113,18 +113,40 @@ BDD_ID Manager::coFactorFalse(const BDD_ID f) // E CoFactor of f
 	if (f.getID()==2){
 		return True();
 	}
-	if (f.getLow().getID() == f.getHigh().getID() == f.getID()){
+	else if ((f.getLow())->getID() == (f.getHigh())->getID() == f.getID()){
 		return f;
 	}
-	if (f.getID()==1){
+	else if (f.getID()==1){
 		return f;
 	}
-	return f.getLow();
+	return *f.getLow();
 }
 
 BDD_ID Manager::ite(const BDD_ID f,const BDD_ID g,const BDD_ID h)
 {
-        return BDD_ID(" ",1);
+    	/*===== Terminal Case Recursion Check =====*/
+	if ((f.getID()==2)||(f.getID()==1)||((g.getID()==2) && (h.getID()==1))||(g.getID()==h.getID())){
+		return f;	
+	}
+	else if ((g.getID()==1) && (h.getID()==2)){
+		return f;	
+	}
+	/*TODO: Check Computed Table: Eliminate Repetitions in Computations */
+	
+	else{
+		BDD_ID rhh = ite(*f.getHigh(), *g.getHigh(), *h.getHigh());
+		BDD_ID rll = ite(*f.getLow(), *g.getLow(), *h.getLow());
+		if (rhh == rll){
+			return rhh;		
+		}
+		/*TODO: Find Or Add in/to Unique Table -> Eliminate Isomorphic Sub-Graphs */
+		/* BDD_ID r = find_or_add_unique_table(topVar, rhh, rll) 
+		END TODO*/
+		/*TODO: Update Computed Table 
+		END TODO*/
+		/* return r;*/
+	}
+
 }
 
 BDD_ID Manager::and2(const BDD_ID f,const BDD_ID g)
