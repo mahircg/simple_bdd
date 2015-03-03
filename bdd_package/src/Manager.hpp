@@ -28,8 +28,8 @@ public:
 	Manager();
 	~Manager();
 	BDD_ID createVar(const string&);
-	BDD_ID True() const;
-	BDD_ID False() const;
+	BDD_ID* True() const;
+	BDD_ID* False() const;
 	bool isVariable(const BDD_ID&);
 	bool isConstant(const BDD_ID&);
 	size_t topVar(const BDD_ID&);

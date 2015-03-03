@@ -67,10 +67,7 @@ public:
 	void findVarsTest(void);
 	
 private:
-	BDD_ID *a;
-	BDD_ID *b;
-	BDD_ID *c;
-	BDD_ID *d;
+
 	Manager *man;
  };
 

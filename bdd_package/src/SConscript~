@@ -1,0 +1,18 @@
+# import arguments passed on: environment and installation directory
+Import('env','instdir')
+
+# create static library for the Fraction class
+# this library will be used to create the executable for testing purposes
+library = env.Library(target = "libBDD", source = ['BDD_ID.cpp','Manager.cpp'])
+
+# define location where the library will be installed
+libdir = instdir + "/lib"
+
+# install library into the sprecified directory ("install/lib/")
+env.Install(libdir,library)
+
+# call scons for the unit tests with export arguments:
+# - env: environment
+# - library: library above created
+SConscript('unittest/SConscript', exports=['env','library'])
+

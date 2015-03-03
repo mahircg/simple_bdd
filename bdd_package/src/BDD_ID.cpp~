@@ -8,7 +8,6 @@ using namespace std;
 
 bool BDD_ID::operator==(const BDD_ID& rhs) const
 {
-  
   return (this->variable==rhs.variable) && (this->low->id==rhs.low->id) && (this->high->id==rhs.high->id);
 }
 
@@ -38,21 +37,16 @@ ostream& operator<<(ostream& osObject,const BDD_ID &bddObj)
 
 BDD_ID::BDD_ID(const BDD_ID& rhs)
 {
-  
   this->id = rhs.id;
   this->variable=rhs.variable;
-  if(!(rhs.low == NULL || rhs.high==NULL))
-  {
-    this->low=rhs.low;
-    this->high=rhs.high;
-  }
+  *(this->low)=*(rhs.low);
+  *(this->high)=*(rhs.high);
 }
 
 
 
 BDD_ID* BDD_ID::getLow() const
 {
-  
   return low;
 }
 
@@ -70,14 +64,17 @@ BDD_ID::BDD_ID(const string variable,unsigned id):id(id), variable(variable)
 
 BDD_ID::BDD_ID(const string variable,unsigned id,BDD_ID* t,BDD_ID* e):id(id), variable(variable) 
 {
-  
 	low=e;
 	high=t;
 }
 
 
+BDD_ID::BDD_ID(const string variable,unsigned id,BDD_ID const& t,BDD_ID const& e):id(id), variable(variable) 
+{
+	*low=e;
+	*high=t;
+}
 
- 
 void BDD_ID::setLow(class BDD_ID& e)
 {
 	*low=e;

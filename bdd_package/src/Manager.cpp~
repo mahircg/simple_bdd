@@ -17,28 +17,25 @@ Manager::~Manager()
 BDD_ID Manager::createVar(const string& varName)
 {
   nextID+=1;
-  BDD_ID* low  = False();
-  BDD_ID* high = True();
-  BDD_ID tmp(varName,nextID,high,low);
-  pair<BDD_ID,unsigned> elem(tmp,nextID);
-  uniqueTable.insert(elem);
-  return tmp;
+  
+  return BDD_ID(varName,nextID,True(),False());
 	
 }
 
-BDD_ID* Manager::True() const
+BDD_ID Manager::True() const
 {
-  return new BDD_ID(" ",2);
+  
+  return BDD_ID(" ",2);
 }
 
-BDD_ID* Manager::False() const
+BDD_ID Manager::False() const
 {
-  return new BDD_ID(" ",1);
+  return BDD_ID(" ",1);
 }
 
 bool Manager::isVariable(const BDD_ID& node)
 {
-	return (node.getID()!=1 && node.getID()!=2);
+	return (node.getID()!=1 || node.getID()!=2);
 }
 
 bool Manager::isConstant(const BDD_ID& node)
@@ -91,8 +88,7 @@ BDD_ID Manager::coFactorFalse(const BDD_ID f,const BDD_ID g)
 	BDD_ID t = coFactorFalse(coFactorTrue(f),coFactorTrue(g));
 	BDD_ID e = coFactorFalse(coFactorFalse(f),coFactorFalse(g));
 	if (t == e){
-		return t;
-		
+		return t;	
 	}
 	/* TODO: Find Or Create Node to be Implemented -> Unique Table*/
 }
@@ -109,7 +105,7 @@ BDD_ID Manager::coFactorTrue(const BDD_ID f) // T CoFactor of f
 	else if (f.getID()==2){
 		return f;
 	}
-	// return *f.getHigh();
+	return *f.getHigh();
 }
 
 BDD_ID Manager::coFactorFalse(const BDD_ID f) // E CoFactor of f
@@ -123,7 +119,7 @@ BDD_ID Manager::coFactorFalse(const BDD_ID f) // E CoFactor of f
 	else if (f.getID()==1){
 		return f;
 	}
-	// return *f.getLow();
+	return *f.getLow();
 }
 
 BDD_ID Manager::ite(const BDD_ID f,const BDD_ID g,const BDD_ID h)
@@ -133,7 +129,7 @@ BDD_ID Manager::ite(const BDD_ID f,const BDD_ID g,const BDD_ID h)
 		return f;	
 	}
 	else if ((g.getID()==1) && (h.getID()==2)){
-		return f;	
+		return !(f);	
 	}
 	/*TODO: Check Computed Table: Eliminate Repetitions in Computations */
 	
@@ -185,8 +181,7 @@ BDD_ID Manager::neg(const BDD_ID f)
 
 string Manager::getTopVarName(const BDD_ID& f)
 {
-  //string() operator overloaded for BDD_ID,so statement below is valid
-  return f;
+	return f;
 }
 
 void Manager::findNodes(const BDD_ID& f,set<BDD_ID>& list)

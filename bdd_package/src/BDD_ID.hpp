@@ -3,7 +3,7 @@
 
 #include<iostream>
 #include<string>
-
+#include<cassert>
 
 using namespace std;
 
@@ -27,7 +27,7 @@ public:
         BDD_ID(const BDD_ID&);
 	BDD_ID(const string,unsigned);
 	BDD_ID(const string,unsigned,BDD_ID*,BDD_ID*);
-	BDD_ID(const string,unsigned,BDD_ID const&,BDD_ID const&);
+        
 	void setLow(BDD_ID&);
 	void setHigh(BDD_ID&);
         unsigned getID(void) const;
@@ -39,9 +39,11 @@ public:
 
 class BDD_Hash
 {
+public:
    size_t operator() (const BDD_ID& bdd_id) const
     {
-      return ((hash<unsigned>()(static_cast<int>(((string)bdd_id)[0]))) + (hash<unsigned>()(bdd_id.getLow()->getID())) + (hash<unsigned>()(bdd_id.getHigh()->getID())));
+    
+      return ((hash<unsigned>()(static_cast<int>(((string)bdd_id)[0]))) *  (hash<unsigned>()(bdd_id.getLow()->getID())) / (hash<unsigned>()(bdd_id.getHigh()->getID())));
     }
 };
 
