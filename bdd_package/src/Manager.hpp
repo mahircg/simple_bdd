@@ -24,6 +24,8 @@ class Manager
 private:
 	uniqueTableType uniqueTable;		//Equality operator of BDD_ID overloaded such that key for a BDD object is its variable,low node id and high node id.
 	unsigned nextID;
+   BDD_ID* low;
+   BDD_ID* high;
 public:
 	Manager();
 	~Manager();
