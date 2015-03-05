@@ -82,26 +82,10 @@ void ManagerTest::coFactorWithTopTrueTest(void)
 	CPPUNIT_ASSERT_EQUAL(man->coFactorTrue(*a,d).getID(),f->getID());
 	CPPUNIT_ASSERT_EQUAL(man->coFactorTrue(d,d).getID(),d.getHigh().getID());
 	// Recursive Test
-	
-
 }
 
 void ManagerTest::coFactorWithTopFalseTest(void)
 {
-	BDD_ID* a=man->False();
-	BDD_ID* b=man->True();
-	BDD_ID c=man->createVar("c");
-	BDD_ID d=man->createVar("d");	
-	BDD_ID e=man->createVar("e");
-	BDD_ID f=man->createVar("f");
-	f.setLow(e); f.setHigh(d);
-	e.setLow(c); e.setHigh(d);
-	d.setLow(*a); d.setHigh(*b);
-	c.setLow(*a); d.setHigh(*b);
-	CPPUNIT_ASSERT_EQUAL(man->coFactorTrue(d,f).getID(),f.getID());
-	CPPUNIT_ASSERT_EQUAL(man->coFactorTrue(*a,d).getID(),f->getID());
-	CPPUNIT_ASSERT_EQUAL(man->coFactorTrue(d,d).getID(),d.getLow().getID());
-	// Recursive Test
 	
 }
 
