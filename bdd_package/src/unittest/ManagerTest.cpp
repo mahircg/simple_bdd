@@ -51,9 +51,10 @@ void ManagerTest::isVariableTest(void)
 {
   BDD_ID a=man->createVar("a");
   BDD_ID b=man->createVar("b");
-  BDD_ID f=man->or2(a,b);
-  CPPUNIT_ASSERT_EQUAL(man->isVariable(f),true);
-  CPPUNIT_ASSERT_EQUAL(man->isVariable(a),false);
+  //BDD_ID f=man->or2(a,b);
+  //CPPUNIT_ASSERT_EQUAL(man->isVariable(f),true);
+  CPPUNIT_ASSERT_EQUAL(man->isVariable(a),true);
+  CPPUNIT_ASSERT_EQUAL(man->isVariable(b),true);
 }
 
 void ManagerTest::topVarTest(void)
@@ -83,20 +84,34 @@ void ManagerTest::coFactorFalseTest(void)
 
 void ManagerTest::iteTest(void)
 {
+  //BDD_ID a=man->createVar("a");
+  //CPPUNIT_ASSERT_EQUAL(man->ite(a,*man->True(),*man->False()),a);
 	
 }
 
 void ManagerTest::and2Test(void)
 {
-  // BDD_ID a=man->createVar("a");
-  // BDD_ID b=man->createVar("b");
-  // BDD_ID f=man->and2(a,b);
-  // CPPUNIT_ASSERT_EQUAL(f.getLow()->getID(),man->False().getID());
-  // CPPUNIT_ASSERT_EQUAL(f.getHigh()->getID(),b.getID());
+  BDD_ID a=man->createVar("a");
+  BDD_ID b=man->createVar("b");
+  BDD_ID f=man->and2(a,b);
+  BDD_ID g=man->and2(f,*man->False());
+  
+  CPPUNIT_ASSERT_EQUAL(*f.getHigh(),b);
+  CPPUNIT_ASSERT_EQUAL(*f.getLow(),*man->False());
+  CPPUNIT_ASSERT_EQUAL(g,*man->False());
 }
 
 void ManagerTest::or2Test(void)
 {
+  BDD_ID a=man->createVar("a");
+  BDD_ID b=man->createVar("b");
+  BDD_ID f=man->or2(a,b);
+  BDD_ID g=man->or2(*man->False(),f);
+  BDD_ID h=man->or2(g,*man->True());
+  CPPUNIT_ASSERT_EQUAL(*f.getLow(),b);
+  CPPUNIT_ASSERT_EQUAL(*f.getHigh(),*man->True());
+  CPPUNIT_ASSERT_EQUAL(f,g);
+  CPPUNIT_ASSERT_EQUAL(h,*man->True());
 
 }
 

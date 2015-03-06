@@ -35,6 +35,7 @@ public:
         BDD_ID* getLow(void) const;
         BDD_ID* getHigh(void) const; 
 	operator string() const;
+  operator unsigned() const;
 };
 
 class BDD_Hash

@@ -32,7 +32,7 @@ public:
 	BDD_ID* False() const;
 	bool isVariable(const BDD_ID&);
 	bool isConstant(const BDD_ID&);
-	size_t topVar(const BDD_ID&);
+	BDD_ID topVar(const BDD_ID&);
 	BDD_ID coFactorTrue(const BDD_ID,const BDD_ID);
 	BDD_ID coFactorFalse(const BDD_ID,const BDD_ID);
 	BDD_ID coFactorTrue(const BDD_ID);
