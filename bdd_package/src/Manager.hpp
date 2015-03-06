@@ -24,8 +24,8 @@ class Manager
 private:
 	uniqueTableType uniqueTable;		//Equality operator of BDD_ID overloaded such that key for a BDD object is its variable,low node id and high node id.
 	unsigned nextID;
-   BDD_ID* low;
-   BDD_ID* high;
+   	BDD_ID* low;
+   	BDD_ID* high;
 public:
 	Manager();
 	~Manager();
@@ -34,7 +34,7 @@ public:
 	BDD_ID* False() const;
 	bool isVariable(const BDD_ID&);
 	bool isConstant(const BDD_ID&);
-	size_t topVar(const BDD_ID&);
+	BDD_ID topVar(const BDD_ID&);
 	BDD_ID coFactorTrue(const BDD_ID,const BDD_ID);
 	BDD_ID coFactorFalse(const BDD_ID,const BDD_ID);
 	BDD_ID coFactorTrue(const BDD_ID);

@@ -8,7 +8,8 @@ using namespace std;
 
 bool BDD_ID::operator==(const BDD_ID& rhs) const
 {
-  
+  if(this->low==NULL || this->high==NULL || rhs.low == NULL || rhs.high == NULL)
+    return this->id ==rhs.id;
   return (this->variable==rhs.variable) && (this->low->id==rhs.low->id) && (this->high->id==rhs.high->id);
 }
 
@@ -16,6 +17,11 @@ bool BDD_ID::operator==(const BDD_ID& rhs) const
 BDD_ID::operator string() const
 {
 	return variable;
+}
+
+BDD_ID::operator unsigned() const
+{
+  return id;
 }
 
 void BDD_ID::setID(unsigned id)

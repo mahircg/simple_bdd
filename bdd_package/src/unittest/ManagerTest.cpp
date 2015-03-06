@@ -17,35 +17,39 @@ void ManagerTest::constructorTest(void)
 	
 }
 
-void ManagerTest::createVarTest(void)
+void ManagerTest::createVarTest(void) // Tests Done!!!
 {
   	BDD_ID a = man->createVar("x");
   	BDD_ID b = man->createVar("y");
   	CPPUNIT_ASSERT(a.getID() != b.getID()); //no two variables have the same id
-	//more tests will come here
+	CPPUNIT_ASSERT(a.getID() != (unsigned)2); // id of a var cannot be 2
+	CPPUNIT_ASSERT(a.getID() != (unsigned)1); // id of a var cannot be 1
+	
 }
 
-void ManagerTest::trueTest(void)
+void ManagerTest::trueTest(void) // Tests Done!!!
 {
   	BDD_ID* t=man->True();
   	CPPUNIT_ASSERT_EQUAL(t->getID(),(unsigned)2);	
 }
 
-void ManagerTest::falseTest(void)
+void ManagerTest::falseTest(void) // Tests Done!!!
 {
   	BDD_ID* e=man->False();
   	CPPUNIT_ASSERT_EQUAL(e->getID(),(unsigned)1);	
 }
 	
-void ManagerTest::isConstantTest(void)
+void ManagerTest::isConstantTest(void) // Tests Done!!!
 {
 	BDD_ID* t=man->True();
         BDD_ID* e=man->False();
+	BDD_ID a = man->createVar("x");
 	CPPUNIT_ASSERT_EQUAL(man->isConstant(*t),true);
         CPPUNIT_ASSERT_EQUAL(man->isConstant(*e),true);
+	CPPUNIT_ASSERT_EQUAL(man->isConstant(a),false);
 }
 
-void ManagerTest::isVariableTest(void)
+void ManagerTest::isVariableTest(void) // Tests Done!!!
 {
   	BDD_ID a=man->createVar("a");
   	BDD_ID b=man->createVar("b");
@@ -56,14 +60,17 @@ void ManagerTest::isVariableTest(void)
   	CPPUNIT_ASSERT_EQUAL(man->isVariable(*d),false);
 }
 
-void ManagerTest::topVarTest(void)
+void ManagerTest::topVarTest(void) // Tests Done!!!
 {
 	BDD_ID c=man->createVar("c");
-	CPPUNIT_ASSERT_EQUAL(man->topVar(c), (long unsigned)3);
+	CPPUNIT_ASSERT_EQUAL(man->topVar(c).getID(), (unsigned)3);
 	BDD_ID d=man->createVar("d");
-	CPPUNIT_ASSERT_EQUAL(man->topVar(d), (long unsigned)4); 
-	BDD_ID e=man->createVar("e");
-	CPPUNIT_ASSERT_EQUAL(man->topVar(e), (long unsigned)5); 
+	CPPUNIT_ASSERT_EQUAL(man->topVar(d).getID(), (unsigned)4);
+	BDD_ID* t=man->True();
+	CPPUNIT_ASSERT_EQUAL(man->topVar(*t).getID(), (unsigned)2);
+        BDD_ID* e=man->False();
+	CPPUNIT_ASSERT_EQUAL(man->topVar(*e).getID(), (unsigned)1);
+	
 }
 
 void ManagerTest::coFactorWithTopTrueTest(void)
@@ -77,11 +84,10 @@ void ManagerTest::coFactorWithTopTrueTest(void)
 	f.setLow(e); f.setHigh(d);
 	e.setLow(c); e.setHigh(d);
 	d.setLow(*a); d.setHigh(*b);
-	c.setLow(*a); d.setHigh(*b);
-	CPPUNIT_ASSERT_EQUAL(man->coFactorTrue(d,f).getID(),f.getID());
-	CPPUNIT_ASSERT_EQUAL(man->coFactorTrue(*a,d).getID(),f->getID());
-	CPPUNIT_ASSERT_EQUAL(man->coFactorTrue(d,d).getID(),d.getHigh().getID());
-	// Recursive Test
+	c.setLow(*a); c.setHigh(*b);
+	CPPUNIT_ASSERT_EQUAL(man->coFactorTrue(c,f).getID(),f.getID()); // Test f < var
+	CPPUNIT_ASSERT_EQUAL(man->coFactorTrue(c,c).getID(),b->getID()); // Test f == var
+	// Test f > var
 	
 
 }
@@ -97,15 +103,13 @@ void ManagerTest::coFactorWithTopFalseTest(void)
 	f.setLow(e); f.setHigh(d);
 	e.setLow(c); e.setHigh(d);
 	d.setLow(*a); d.setHigh(*b);
-	c.setLow(*a); d.setHigh(*b);
-	CPPUNIT_ASSERT_EQUAL(man->coFactorTrue(d,f).getID(),f.getID());
-	CPPUNIT_ASSERT_EQUAL(man->coFactorTrue(*a,d).getID(),f->getID());
-	CPPUNIT_ASSERT_EQUAL(man->coFactorTrue(d,d).getID(),d.getLow().getID());
-	// Recursive Test
-	
+	c.setLow(*a); c.setHigh(*b);
+	CPPUNIT_ASSERT_EQUAL(man->coFactorFalse(c,f).getID(),f.getID()); // Test f < var
+	CPPUNIT_ASSERT_EQUAL(man->coFactorFalse(c,c).getID(),a->getID()); // Test f == var
+	// Test f > var	
 }
 
-void ManagerTest::coFactorTrueTest(void)
+void ManagerTest::coFactorTrueTest(void) // Tests Done!!!
 {
 	BDD_ID* a=man->False();
 	CPPUNIT_ASSERT_EQUAL(man->coFactorTrue(*a).getID(),(unsigned)1);
@@ -125,7 +129,7 @@ void ManagerTest::coFactorTrueTest(void)
 	
 }
 
-void ManagerTest::coFactorFalseTest(void)
+void ManagerTest::coFactorFalseTest(void) // Tests Done!!!
 {
 	BDD_ID* a=man->False();
 	CPPUNIT_ASSERT_EQUAL(man->coFactorFalse(*a).getID(),(unsigned)1);
@@ -146,19 +150,34 @@ void ManagerTest::coFactorFalseTest(void)
 
 void ManagerTest::iteTest(void)
 {
-	BDD_ID f=man->createVar("f"); 	// f.id=3
-	BDD_ID g=man->createVar("g");	// g.id=4
-	BDD_ID h=man->createVar("h");	// h.id=5
-	//CPPUNIT_ASSERT_EQUAL(man->ite(f,g,h).getID(),f.getID());
+	// Test Terminal Cases:
+	BDD_ID* a=man->False();
+	BDD_ID* b=man->True();
+	BDD_ID  f=man->createVar("f");//d
+	BDD_ID  g=man->createVar("g");//c
+	BDD_ID  h=man->createVar("h");//b
+	BDD_ID  i=man->createVar("i");//a
+
+	CPPUNIT_ASSERT_EQUAL(man->ite(*a,g,h).getID(),h.getID()); // ite(0,g,h) = h
+	CPPUNIT_ASSERT_EQUAL(man->ite(*b,g,h).getID(),g.getID()); // ite(1,g,h) = g
+	CPPUNIT_ASSERT_EQUAL(man->ite(f,g,g).getID(),g.getID()); // ite(f,g,g) = g
+	CPPUNIT_ASSERT_EQUAL(man->ite(f,*b,*a).getID(),f.getID()); // ite(f,1,0) = f
+	CPPUNIT_ASSERT_EQUAL(man->ite(f,*a,*b).getID(),man->neg(f).getID()); // ite(f,0,1) = neg(f)
+	// Recursive Case Test:
+	
+	
+	
+	
 }
 
 void ManagerTest::and2Test(void)
 {
-  // BDD_ID a=man->createVar("a");
-  // BDD_ID b=man->createVar("b");
-  // BDD_ID f=man->and2(a,b);
-  // CPPUNIT_ASSERT_EQUAL(f.getLow()->getID(),man->False().getID());
-  // CPPUNIT_ASSERT_EQUAL(f.getHigh()->getID(),b.getID());
+  	
+  	BDD_ID b=man->createVar("b");
+	BDD_ID a=man->createVar("a");
+  	BDD_ID f=man->and2(a,b);
+  	CPPUNIT_ASSERT_EQUAL(f.getLow()->getID(),man->False()->getID());
+  	CPPUNIT_ASSERT_EQUAL(f.getHigh()->getID(),a.getID());
 }
 
 void ManagerTest::or2Test(void)
@@ -173,7 +192,7 @@ void ManagerTest::xorTest(void)
 
 void ManagerTest::negTest(void)
 {
-
+	
 }
 
 void ManagerTest::nand2Test(void)
