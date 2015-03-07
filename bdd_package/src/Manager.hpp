@@ -2,7 +2,7 @@
  * \class Manager
  *
  * \brief Public interface for BDD management
- * 
+ *
  * This class provides following functionalities
  * * Initialization and assignment of new variables/nodes
  * * Addition of variables/nodes into a BDD
@@ -11,44 +11,46 @@
 #ifndef HPP_MANAGER
 #define HPP_MANAGER
 
-#include "BDD_ID.hpp"
 #include<set>
 #include<unordered_map>
+#include<string>
+#include"BDD_ID.hpp"
 
 using namespace std;
 
 typedef unordered_map<BDD_ID,unsigned,BDD_Hash> uniqueTableType;
 
-class Manager 
+class Manager
 {
 private:
-	uniqueTableType uniqueTable;		//Equality operator of BDD_ID overloaded such that key for a BDD object is its variable,low node id and high node id.
 	unsigned nextID;
-   	BDD_ID* low;
-   	BDD_ID* high;
+	const unsigned low=1;
+	const unsigned high=2;
+	uniqueTableType uniqueTable;
+
 public:
 	Manager();
 	~Manager();
-	BDD_ID createVar(const string&);
-	BDD_ID* True() const;
-	BDD_ID* False() const;
-	bool isVariable(const BDD_ID&);
-	bool isConstant(const BDD_ID&);
-	BDD_ID topVar(const BDD_ID&);
-	BDD_ID coFactorTrue(const BDD_ID,const BDD_ID);
-	BDD_ID coFactorFalse(const BDD_ID,const BDD_ID);
-	BDD_ID coFactorTrue(const BDD_ID);
-	BDD_ID coFactorFalse(const BDD_ID);
-	BDD_ID ite (const BDD_ID,const BDD_ID,const BDD_ID);
-	BDD_ID and2(const BDD_ID,const BDD_ID);
-	BDD_ID or2(const BDD_ID,const BDD_ID);
-	BDD_ID xor2(const BDD_ID,const BDD_ID);
-	BDD_ID neg(const BDD_ID);
-	BDD_ID nand2(const BDD_ID,const BDD_ID);
-	BDD_ID nor2(const BDD_ID,const BDD_ID);
-	string getTopVarName(const BDD_ID&);
-	void findNodes(const BDD_ID&,set<BDD_ID>&);
-	void findVars(const BDD_ID&,set<BDD_ID>&);
+	unsigned createVar(const string&);
+	unsigned True() const;
+	unsigned False() const;
+	bool isVariable(const unsigned&);
+	bool isConstant(const unsigned&);
+	unsigned topVar(const unsigned&);
+	unsigned coFactorTrue(const unsigned,const unsigned);
+	unsigned coFactorFalse(const unsigned,const unsigned);
+	unsigned coFactorTrue(const unsigned);
+	unsigned coFactorFalse(const unsigned);
+	unsigned ite (const unsigned,const unsigned,const unsigned);
+	unsigned and2(const unsigned,const unsigned);
+	unsigned or2(const unsigned,const unsigned);
+	unsigned xor2(const unsigned,const unsigned);
+	unsigned neg(const unsigned);
+	unsigned nand2(const unsigned,const unsigned);
+	unsigned nor2(const unsigned,const unsigned);
+	string getTopVarName(const unsigned&);
+	void findNodes(const unsigned&,set<unsigned>&);
+	void findVars(const unsigned&,set<unsigned>&);
 
 };
 
