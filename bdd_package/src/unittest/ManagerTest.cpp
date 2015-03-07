@@ -19,39 +19,39 @@ void ManagerTest::constructorTest(void)
 
 void ManagerTest::createVarTest(void)
 {
-  BDD_ID a = man->createVar("x");
-  BDD_ID b = man->createVar("y");
-  CPPUNIT_ASSERT(a.getID() != b.getID()); //no two variables have the same id
+  unsigned a = man->createVar("x");
+  unsigned b = man->createVar("y");
+  CPPUNIT_ASSERT(a != b); //no two variables have the same id
 	//more tests will come here
 }
 
 void ManagerTest::trueTest(void)
 {
-  BDD_ID* t=man->True();
-  CPPUNIT_ASSERT_EQUAL(t->getID(),(unsigned)2);			//ID for terminal node TRUE
+  const unsigned t=man->True();
+  CPPUNIT_ASSERT_EQUAL(t,(const unsigned)2);			//ID for terminal node TRUE
  
 	
 }
 
 void ManagerTest::falseTest(void)
 {
-  BDD_ID* e=man->False();
-  CPPUNIT_ASSERT_EQUAL(e->getID(),(unsigned)1);			//ID for terminal node FALSE
+  const unsigned e=man->False();
+  CPPUNIT_ASSERT_EQUAL(e,(const unsigned)1);			//ID for terminal node FALSE
 }
 
 void ManagerTest::isConstantTest(void)
 {
-	BDD_ID* t=man->True();
-        BDD_ID* e=man->False();
-	CPPUNIT_ASSERT_EQUAL(man->isConstant(*t),true);
-        CPPUNIT_ASSERT_EQUAL(man->isConstant(*e),true);
+	unsigned t=man->True();
+        unsigned e=man->False();
+	CPPUNIT_ASSERT_EQUAL(man->isConstant(t),true);
+        CPPUNIT_ASSERT_EQUAL(man->isConstant(e),true);
 }
 
 void ManagerTest::isVariableTest(void)
 {
-  BDD_ID a=man->createVar("a");
-  BDD_ID b=man->createVar("b");
-  //BDD_ID f=man->or2(a,b);
+  unsigned a=man->createVar("a");
+  unsigned b=man->createVar("b");
+  //unsigned f=man->or2(a,b);
   //CPPUNIT_ASSERT_EQUAL(man->isVariable(f),true);
   CPPUNIT_ASSERT_EQUAL(man->isVariable(a),true);
   CPPUNIT_ASSERT_EQUAL(man->isVariable(b),true);
@@ -84,34 +84,36 @@ void ManagerTest::coFactorFalseTest(void)
 
 void ManagerTest::iteTest(void)
 {
-  //BDD_ID a=man->createVar("a");
+  //unsigned a=man->createVar("a");
   //CPPUNIT_ASSERT_EQUAL(man->ite(a,*man->True(),*man->False()),a);
 	
 }
 
 void ManagerTest::and2Test(void)
 {
-  BDD_ID a=man->createVar("a");
-  BDD_ID b=man->createVar("b");
-  BDD_ID f=man->and2(a,b);
-  BDD_ID g=man->and2(f,*man->False());
-  
-  CPPUNIT_ASSERT_EQUAL(*f.getHigh(),b);
-  CPPUNIT_ASSERT_EQUAL(*f.getLow(),*man->False());
-  CPPUNIT_ASSERT_EQUAL(g,*man->False());
+  unsigned a=man->createVar("a");
+  unsigned b=man->createVar("b");
+  unsigned c=man->createVar("c");
+  unsigned f=man->and2(a,c);
+  unsigned g=man->and2(b,c);
+  unsigned h=man->or2(f,g);
+   CPPUNIT_ASSERT_EQUAL(man->coFactorTrue(f),c);
+  CPPUNIT_ASSERT_EQUAL(man->coFactorFalse(f),man->False());
+  CPPUNIT_ASSERT_EQUAL(man->coFactorFalse(h),g);
+  // CPPUNIT_ASSERT_EQUAL(man->coFactorTrue(h),c);
 }
 
 void ManagerTest::or2Test(void)
 {
-  BDD_ID a=man->createVar("a");
-  BDD_ID b=man->createVar("b");
-  BDD_ID f=man->or2(a,b);
-  BDD_ID g=man->or2(*man->False(),f);
-  BDD_ID h=man->or2(g,*man->True());
-  CPPUNIT_ASSERT_EQUAL(*f.getLow(),b);
-  CPPUNIT_ASSERT_EQUAL(*f.getHigh(),*man->True());
+  unsigned a=man->createVar("a");
+  unsigned b=man->createVar("b");
+  unsigned f=man->or2(a,b);
+  unsigned g=man->or2(man->False(),f);
+  unsigned h=man->or2(g,man->True());
+  CPPUNIT_ASSERT_EQUAL(man->coFactorFalse(f),b);
+  CPPUNIT_ASSERT_EQUAL(man->coFactorTrue(f),man->True());
   CPPUNIT_ASSERT_EQUAL(f,g);
-  CPPUNIT_ASSERT_EQUAL(h,*man->True());
+  CPPUNIT_ASSERT_EQUAL(h,man->True());
 
 }
 
