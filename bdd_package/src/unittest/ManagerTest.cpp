@@ -93,8 +93,8 @@ void ManagerTest::coFactorTrueTest(void)
 	CPPUNIT_ASSERT_EQUAL(man->coFactorTrue(b),(unsigned)2);
 
 	unsigned c=man->createVar("c");
-	//CPPUNIT_ASSERT_EQUAL(man->coFactorTrue(c),(unsigned)2);
-	//CPPUNIT_ASSERT_EQUAL(man->coFactorFalse(c),(unsigned)1);
+	CPPUNIT_ASSERT_EQUAL(man->coFactorTrue(c),man->True());
+	CPPUNIT_ASSERT_EQUAL(man->coFactorFalse(c),man->False());
 }
 
 void ManagerTest::coFactorFalseTest(void)
@@ -110,7 +110,6 @@ void ManagerTest::iteTest(void)
 	unsigned  c=man->createVar("c");
 	unsigned  d=man->createVar("d");
 	unsigned  f=man->and2(a,b);
-	man->printTable();
 	unsigned  g=man->and2(a,c);
 	unsigned  h=man->or2(b,d);
 	//Testing Terminal Cases:
@@ -156,13 +155,20 @@ void ManagerTest::xorTest(void)
 void ManagerTest::negTest(void)
 {
 	unsigned a=man->createVar("a");
-	man->printTable();
+	unsigned b=man->neg(a);
 	CPPUNIT_ASSERT_EQUAL(man->coFactorFalse(b),man->True()); 
 	CPPUNIT_ASSERT_EQUAL(man->coFactorTrue(b),man->False());
-	//unsigned c=man->createVar("c");
-	//unsigned d=man->createVar("d");
-	//unsigned f=man->and2(c,d);
-	//man->printTable();
+	unsigned c=man->createVar("c");
+	unsigned d=man->createVar("d");
+	unsigned f=man->and2(c,d);
+	unsigned g=man->neg(f);
+	man->printTable();
+	CPPUNIT_ASSERT_EQUAL(man->coFactorTrue(man->coFactorTrue(g)),man->False());
+  	CPPUNIT_ASSERT_EQUAL(man->coFactorFalse(g),man->True());
+	CPPUNIT_ASSERT_EQUAL(man->coFactorFalse(man->coFactorTrue(g)),man->True());
+	unsigned h=man->or2(c,d);
+	
+	
 }
 
 void ManagerTest::nand2Test(void)
