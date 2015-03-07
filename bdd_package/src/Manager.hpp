@@ -51,6 +51,7 @@ public:
 	string getTopVarName(const unsigned&);
 	void findNodes(const unsigned&,set<unsigned>&);
 	void findVars(const unsigned&,set<unsigned>&);
+	void printTable() const;
 
 };
 
