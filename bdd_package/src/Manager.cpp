@@ -152,12 +152,12 @@ unsigned Manager::ite(const unsigned f,const unsigned g,const unsigned h)
 		
 		// Find or Add to Unique Table
 		for(auto it=uniqueTable.begin();it != uniqueTable.end();++it){
-			if (it==uniqueTable.end()){
-				uniqueTable.insert(elem);
-				return nextID;
+			if (it->second == nextID){
+				return it->second;
 			}
 			else{
-				return it->second;
+				uniqueTable.insert(elem);
+				return nextID;
 			}			
 		}   
     	} 
