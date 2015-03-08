@@ -78,12 +78,16 @@ unsigned Manager::coFactorTrue(const unsigned f,const unsigned g)
 	{ 
       if(f==g) 
 			return coFactorTrue(f); 
-      else if(g<f) 
+      else if(f<g) 
 		return f; 
       else 
-		{ 	
-		 return f;
-		} 
+	  {
+	  	unsigned cft,cff;
+		cft=coFactorTrue(coFactorTrue(f),g);
+		cff=coFactorTrue(coFactorFalse(f),g);
+		BDD_ID tmp(getTopVarName(f),cff,cft);
+		return ite(uniqueTable[tmp],cft,cff);
+	  }
     } 	
 }
 
@@ -96,12 +100,16 @@ unsigned Manager::coFactorFalse(const unsigned f,const unsigned g)
 	{ 
 		if(f==g) 
 			return coFactorFalse(f); 
-		else if(g<f) 
+		else if(f<g) 
 			return f; 
-		else 
-		{ 
-		  return f; 
-		} 
+		else
+		{
+			unsigned cft,cff;
+			cft=coFactorFalse(coFactorTrue(f),g);
+			cff=coFactorFalse(coFactorFalse(f),g);
+			BDD_ID tmp(getTopVarName(f),cff,cft);
+			return ite(uniqueTable[tmp],cft,cff);
+		}
     } 
 
 }
@@ -169,7 +177,7 @@ unsigned Manager::ite(const unsigned f,const unsigned g,const unsigned h)
   else if (f==False()) 
        return h; 
   else if (h ==False() && g == True()) 
-       return f; 
+		return f;
   else 
     { 
       

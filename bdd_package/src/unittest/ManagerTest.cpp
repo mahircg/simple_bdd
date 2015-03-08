@@ -80,14 +80,24 @@ void ManagerTest::coFactorWithTopTrueTest(void)
 {
 	unsigned a=man->createVar("a");
 	unsigned b=man->createVar("b");
-	unsigned f=man->and2(a,b);
-	unsigned g=man->coFactorTrue(f,b);
-	CPPUNIT_ASSERT_EQUAL(g,a);
+	unsigned c=man->createVar("c");
+	unsigned f=man->and2(a,c);
+	unsigned g=man->and2(b,c);
+	unsigned h=man->or2(f,g);
+	unsigned i=man->coFactorTrue(h,c);
+	CPPUNIT_ASSERT_EQUAL(i,man->or2(a,b));
 }
 
 void ManagerTest::coFactorWithTopFalseTest(void)
 {
-	
+	unsigned a=man->createVar("a");
+	unsigned b=man->createVar("b");
+	unsigned c=man->createVar("c");
+	unsigned f=man->and2(a,c);
+	unsigned g=man->and2(b,c);
+	unsigned h=man->or2(f,g);
+	unsigned i=man->coFactorFalse(h,c);
+	CPPUNIT_ASSERT_EQUAL(i,man->False());
 }
 
 void ManagerTest::coFactorTrueTest(void)
@@ -154,7 +164,6 @@ void ManagerTest::negTest(void)
 	unsigned aNeg=man->neg(a);
 	unsigned b=man->createVar("b");
 	unsigned f=man->neg(man->and2(a,b));
-	man->printTable();
 	CPPUNIT_ASSERT_EQUAL(man->coFactorTrue(aNeg),man->False());		//check right of not(a)
 	CPPUNIT_ASSERT_EQUAL(man->coFactorFalse(aNeg),man->True());		//check left of not(a)
 	CPPUNIT_ASSERT_EQUAL(man->neg(man->True()),man->False());		//check output of not(true)
