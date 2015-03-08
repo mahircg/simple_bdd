@@ -210,6 +210,8 @@ unsigned Manager::and2(const unsigned f,const unsigned g)
       else
 	{}
     }
+  if(coFactorTrue(f)==coFactorFalse(g) && coFactorFalse(f)==coFactorTrue(g))		//check in g=not(f) without calling neg
+	return False();
   return ite(f,g,False());
 }
 
@@ -226,6 +228,9 @@ unsigned Manager::or2(const unsigned f,const unsigned g)
     else
       {}
   }
+
+  if(coFactorTrue(f)==coFactorFalse(g) && coFactorFalse(f)==coFactorTrue(g))		//check in g=not(f) without calling neg
+	return True();	
   return ite(f,True(),g);
 }
 
