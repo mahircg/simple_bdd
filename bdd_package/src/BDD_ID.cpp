@@ -17,4 +17,24 @@ BDD_ID::BDD_ID(const BDD_ID& rhs)
 	this->high=rhs.high;
 }
 
+bool BDD_ID::operator<(const BDD_ID& rhs) const
+{
+	return this->var[0] < rhs.var[0];
+}
+
+bool BDD_ID::operator<=(const BDD_ID& rhs) const
+{
+	return this->var[0] <= rhs.var[0];
+}
+
+bool BDD_ID::operator>(const BDD_ID& rhs) const
+{
+	return this->var[0] > rhs.var[0];
+}
+
+bool BDD_ID::operator >= (const BDD_ID& rhs) const
+{
+	return this->var[0] >= rhs.var[0];
+}
+
 

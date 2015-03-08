@@ -26,6 +26,7 @@ private:
 	unsigned nextID;
 	const unsigned low=1;
 	const unsigned high=2;
+	unsigned getSortedID(unsigned,unsigned,unsigned);
 	uniqueTableType uniqueTable;
 
 public:

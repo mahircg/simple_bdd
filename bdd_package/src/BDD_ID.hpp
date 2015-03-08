@@ -20,6 +20,10 @@ struct BDD_ID
 	string var;
   
 	bool operator==(const BDD_ID&) const;
+	bool operator<(const BDD_ID&) const;
+	bool operator<=(const BDD_ID&) const;
+	bool operator>(const BDD_ID&) const;
+	bool operator>=(const BDD_ID&) const;
 	BDD_ID(const string,unsigned,unsigned);
 	BDD_ID(const BDD_ID&);
         

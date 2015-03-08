@@ -4,6 +4,8 @@
 
 #include "Manager.hpp"
 #include<iostream>
+#include<vector>
+#include<algorithm>
 using namespace std;
 
 
@@ -19,11 +21,26 @@ Manager::~Manager()
 
 unsigned Manager::createVar(const string& varName)
 {
-  nextID+=1;
-
+  bool isAvailable=false;
+  unsigned presentID;
   BDD_ID tmp(varName,low,high);
-  pair<BDD_ID,unsigned> elem(tmp,nextID);
-  uniqueTable.insert(elem);
+  for(auto& itr : uniqueTable)
+  {
+	BDD_ID k((BDD_ID)(itr.first));
+	if(uniqueTable.key_eq()(k,tmp))
+	{
+		isAvailable=true;
+		presentID=itr.second;
+	}
+  }
+  if(!isAvailable)
+  {
+	nextID+=1;
+    pair<BDD_ID,unsigned> elem(tmp,nextID);
+    uniqueTable.insert(elem);
+  }
+  else
+	return presentID;
   return nextID;
 
 }
@@ -64,8 +81,8 @@ unsigned Manager::coFactorTrue(const unsigned f,const unsigned g)
       else if(g<f) 
 		return f; 
       else 
-		{ 
-		  return g;
+		{ 	
+		 return f;
 		} 
     } 	
 }
@@ -83,7 +100,7 @@ unsigned Manager::coFactorFalse(const unsigned f,const unsigned g)
 			return f; 
 		else 
 		{ 
-		  return g; 
+		  return f; 
 		} 
     } 
 
@@ -156,20 +173,28 @@ unsigned Manager::ite(const unsigned f,const unsigned g,const unsigned h)
   else 
     { 
       
-      unsigned x=topVar(f);
+      unsigned x=getSortedID(topVar(f),topVar(g),topVar(h));
       unsigned t=ite(coFactorTrue(f,x),coFactorTrue(g,x),coFactorTrue(h,x)); 
       unsigned e=ite(coFactorFalse(f,x),coFactorFalse(g,x),coFactorFalse(h,x)); 
       if(t==e) 
        	return t; 
-      nextID += 1; 
-      BDD_ID tmp(getTopVarName(x),e,t); 
-      pair<BDD_ID,unsigned> elem(tmp,nextID); 
-      uniqueTable.insert(elem);
-      printTable();
-      return nextID;
-
+	  BDD_ID tmp(getTopVarName(x),e,t);
+	  auto res=uniqueTable.find(tmp);
+	  if(res==uniqueTable.end())
+	  {
+		nextID += 1; 
+		pair<BDD_ID,unsigned> elem(tmp,nextID); 
+		uniqueTable.insert(elem);
+		return nextID;
+	  }
+	  else
+	  {
+		return uniqueTable[tmp];
+	  }
+	  
       
     } 
+	
 }
 
 unsigned Manager::and2(const unsigned f,const unsigned g)
@@ -245,6 +270,33 @@ string Manager::getTopVarName(const unsigned& f)
 	}
 	
 	return var;
+}
+
+unsigned Manager::getSortedID(unsigned f,unsigned g, unsigned h)
+{
+	
+	vector<BDD_ID> list;
+
+	for(auto& itr: uniqueTable)
+	{
+		if(itr.second==f)
+		{
+			list.push_back((BDD_ID)(itr.first));
+		}
+		else if (itr.second==g)
+		{
+			list.push_back((BDD_ID)(itr.first));
+		}
+		else if(itr.second==h)
+		{
+			list.push_back((BDD_ID)(itr.first));
+		}
+	}
+	
+	BDD_ID minBDD((*min_element(list.begin(),list.end())));
+	return uniqueTable[minBDD];
+	
+	
 }
 
 void Manager::findNodes(const unsigned& f,set<unsigned>& list)
