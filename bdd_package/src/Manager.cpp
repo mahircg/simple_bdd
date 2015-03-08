@@ -21,10 +21,9 @@ unsigned Manager::createVar(const string& varName)
 {
   nextID+=1;
 
-  BDD_ID *tmp=new BDD_ID(varName,low,high);
-  pair<BDD_ID,unsigned> elem(*tmp,nextID);
+  BDD_ID tmp(varName,low,high);
+  pair<BDD_ID,unsigned> elem(tmp,nextID);
   uniqueTable.insert(elem);
-  delete tmp;
   return nextID;
 
 }
@@ -62,12 +61,11 @@ unsigned Manager::coFactorTrue(const unsigned f,const unsigned g)
 	{ 
       if(f==g) 
 			return coFactorTrue(f); 
-      else if(f<g) 
-		return g; 
+      else if(g<f) 
+		return f; 
       else 
 		{ 
-			return f; 
-		//here will be the case where second id is less then first id 
+		  return g;
 		} 
     } 	
 }
@@ -81,12 +79,11 @@ unsigned Manager::coFactorFalse(const unsigned f,const unsigned g)
 	{ 
 		if(f==g) 
 			return coFactorFalse(f); 
-		else if(f <g) 
-			return g; 
+		else if(g<f) 
+			return f; 
 		else 
 		{ 
-			return f; 
-		//here will be the case where second id is less then first id 
+		  return g; 
 		} 
     } 
 
@@ -94,7 +91,7 @@ unsigned Manager::coFactorFalse(const unsigned f,const unsigned g)
 
 unsigned Manager::coFactorTrue(const unsigned f) // T CoFactor of f
 {
-	BDD_ID *tmp;
+	
 	unsigned high;
 	if(isConstant(f))
 		return f;
@@ -104,9 +101,8 @@ unsigned Manager::coFactorTrue(const unsigned f) // T CoFactor of f
 			{
 				if(it->second==f)
 				{
-					tmp=new BDD_ID((BDD_ID)(it->first));
-					high=tmp->high;
-					delete tmp;
+				  BDD_ID tmp((BDD_ID)(it->first));
+					high=tmp.high;
 				}
 			}
 	}
@@ -117,7 +113,7 @@ unsigned Manager::coFactorTrue(const unsigned f) // T CoFactor of f
 unsigned Manager::coFactorFalse(const unsigned f) // E CoFactor of f
 {
 
-	BDD_ID *tmp;
+        
 	unsigned low;
 	if(isConstant(f))
 		return f;
@@ -127,14 +123,26 @@ unsigned Manager::coFactorFalse(const unsigned f) // E CoFactor of f
 			{
 				if(it->second==f)
 				{
-					tmp=new BDD_ID((BDD_ID)(it->first));
-					low=tmp->low;
-					delete tmp;
+				  BDD_ID tmp((BDD_ID)(it->first));
+					low=tmp.low;
 				}
 			}
 	}
 	
 	return low;
+}
+
+void Manager::printTable() const
+{
+  
+  unsigned tmpID;
+  cout<<"Variable\tLow\tHigh\tID\t"<<endl;
+  for (auto it=uniqueTable.begin();it!=uniqueTable.end();it++)
+    {
+      BDD_ID tmpBDD((BDD_ID)(it->first));
+      tmpID=it->second;
+      cout<<tmpBDD.var<<"\t"<<tmpBDD.low<<"\t"<<tmpBDD.high<<"\t"<<tmpID<<"\t"<<endl;
+    }
 }
 
 unsigned Manager::ite(const unsigned f,const unsigned g,const unsigned h)
@@ -147,7 +155,8 @@ unsigned Manager::ite(const unsigned f,const unsigned g,const unsigned h)
        return f; 
   else 
     { 
-      unsigned x=topVar(f); 
+      
+      unsigned x=topVar(f);
       unsigned t=ite(coFactorTrue(f,x),coFactorTrue(g,x),coFactorTrue(h,x)); 
       unsigned e=ite(coFactorFalse(f,x),coFactorFalse(g,x),coFactorFalse(h,x)); 
       if(t==e) 
@@ -155,8 +164,11 @@ unsigned Manager::ite(const unsigned f,const unsigned g,const unsigned h)
       nextID += 1; 
       BDD_ID tmp(getTopVarName(x),e,t); 
       pair<BDD_ID,unsigned> elem(tmp,nextID); 
-      uniqueTable.insert(elem); 
-      return nextID; 
+      uniqueTable.insert(elem);
+      printTable();
+      return nextID;
+
+      
     } 
 }
 

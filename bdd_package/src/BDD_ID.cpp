@@ -16,3 +16,5 @@ BDD_ID::BDD_ID(const BDD_ID& rhs)
 	this->low=rhs.low;
 	this->high=rhs.high;
 }
+
+

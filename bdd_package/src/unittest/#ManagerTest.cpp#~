@@ -94,28 +94,25 @@ void ManagerTest::and2Test(void)
   unsigned a=man->createVar("a");
   unsigned b=man->createVar("b");
   unsigned c=man->createVar("c");
-  unsigned f=man->and2(a,c);
+  unsigned f=man->and2(a,b);
   unsigned g=man->and2(b,c);
-  unsigned h=man->or2(f,g);
-  CPPUNIT_ASSERT_EQUAL(man->coFactorTrue(f),c);//check right of f=a.c; should equal to c
-  CPPUNIT_ASSERT_EQUAL(man->coFactorFalse(f),man->False());//check left of f=a.c; should equal to zero
-  CPPUNIT_ASSERT_EQUAL(man->coFactorFalse(g),man->False());//check left of g=a.c,should equal to zero
-  CPPUNIT_ASSERT_EQUAL(man->coFactorTrue(g),c);//check right of h=a.c,should equal to c
-  CPPUNIT_ASSERT_EQUAL(man->coFactorTrue(h),c);
-  CPPUNIT_ASSERT_EQUAL(man->coFactorFalse(h),g);
+  
+   CPPUNIT_ASSERT_EQUAL(man->coFactorTrue(f),b);
+  CPPUNIT_ASSERT_EQUAL(man->coFactorFalse(f),man->False());
+  CPPUNIT_ASSERT_EQUAL(g,man->False());
 }
 
 void ManagerTest::or2Test(void)
 {
-  // unsigned a=man->createVar("a");
-  // unsigned b=man->createVar("b");
-  // unsigned f=man->or2(a,b);
-  // unsigned g=man->or2(man->False(),f);
-  // unsigned h=man->or2(g,man->True());
-  // CPPUNIT_ASSERT_EQUAL(man->coFactorFalse(f),b);
-  // CPPUNIT_ASSERT_EQUAL(man->coFactorTrue(f),man->True());
-  // CPPUNIT_ASSERT_EQUAL(f,g);
-  // CPPUNIT_ASSERT_EQUAL(h,man->True());
+  unsigned a=man->createVar("a");
+  unsigned b=man->createVar("b");
+  unsigned f=man->or2(a,b);
+  unsigned g=man->or2(man->False(),f);
+  unsigned h=man->or2(g,man->True());
+  CPPUNIT_ASSERT_EQUAL(man->coFactorFalse(f),b);
+  CPPUNIT_ASSERT_EQUAL(man->coFactorTrue(f),man->True());
+  CPPUNIT_ASSERT_EQUAL(f,g);
+  CPPUNIT_ASSERT_EQUAL(h,man->True());
 
 }
 

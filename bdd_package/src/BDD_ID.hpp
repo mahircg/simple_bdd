@@ -18,9 +18,11 @@ struct BDD_ID
 {
 	unsigned low,high;
 	string var;
+  
 	bool operator==(const BDD_ID&) const;
 	BDD_ID(const string,unsigned,unsigned);
 	BDD_ID(const BDD_ID&);
+        
 };
 
 class BDD_Hash
