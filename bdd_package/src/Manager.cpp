@@ -83,6 +83,8 @@ unsigned Manager::coFactorTrue(const unsigned f,const unsigned g)
       else 
 	  {
 	  	unsigned cft,cff;
+		if(getTopVarName(f)==getTopVarName(g))
+			return coFactorTrue(f);
 		cft=coFactorTrue(coFactorTrue(f),g);
 		cff=coFactorTrue(coFactorFalse(f),g);
 		BDD_ID tmp(getTopVarName(f),cff,cft);
@@ -105,6 +107,8 @@ unsigned Manager::coFactorFalse(const unsigned f,const unsigned g)
 		else
 		{
 			unsigned cft,cff;
+			if(getTopVarName(f)==getTopVarName(g))
+				return coFactorFalse(f);
 			cft=coFactorFalse(coFactorTrue(f),g);
 			cff=coFactorFalse(coFactorFalse(f),g);
 			BDD_ID tmp(getTopVarName(f),cff,cft);
