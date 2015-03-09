@@ -2,10 +2,6 @@
  * \class Manager
  *
  * \brief Public interface for BDD management
- *
- * This class provides following functionalities
- * * Initialization and assignment of new variables/nodes
- * * Addition of variables/nodes into a BDD
  */
 
 #ifndef HPP_MANAGER

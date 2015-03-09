@@ -83,9 +83,12 @@ void ManagerTest::coFactorWithTopTrueTest(void)
 	unsigned f=man->and2(a,c);
 	unsigned g=man->and2(b,c);
 	unsigned h=man->or2(f,g);
+	unsigned cNeg=man->neg(c);
 	CPPUNIT_ASSERT_EQUAL(man->coFactorTrue(h,c),man->or2(a,b));		// get co-factor of h(a,b,c)=ac+bc with c,result should be a+b
 	CPPUNIT_ASSERT_EQUAL(man->coFactorTrue(f,a),c);					//get co-factor of f with a,result should be c
 	CPPUNIT_ASSERT_EQUAL(man->coFactorTrue(f,c),a);					//get co-factor of f with c,result should be a
+	CPPUNIT_ASSERT_EQUAL(man->coFactorTrue(c,a),c);
+	CPPUNIT_ASSERT_EQUAL(man->coFactorTrue(cNeg,a),cNeg);
 }
 
 void ManagerTest::coFactorWithTopFalseTest(void)
@@ -100,6 +103,8 @@ void ManagerTest::coFactorWithTopFalseTest(void)
 	unsigned h=man->or2(f,g);
 	unsigned i=man->coFactorFalse(h,c);
 	CPPUNIT_ASSERT_EQUAL(i,man->False());
+	CPPUNIT_ASSERT_EQUAL(man->coFactorFalse(c,a),c);
+	CPPUNIT_ASSERT_EQUAL(man->coFactorFalse(man->neg(c),a),man->neg(c));
 }
 
 void ManagerTest::coFactorTrueTest(void)
@@ -160,6 +165,13 @@ void ManagerTest::or2Test(void)
 
 void ManagerTest::xorTest(void)
 {
+	unsigned a=man->createVar("a");
+  	unsigned b=man->createVar("b");
+  	unsigned f=man->xor2(a,b);
+	CPPUNIT_ASSERT_EQUAL(man->coFactorTrue(man->coFactorTrue(f)),man->False());
+	CPPUNIT_ASSERT_EQUAL(man->coFactorFalse(man->coFactorFalse(f)),man->False());
+	CPPUNIT_ASSERT_EQUAL(man->coFactorTrue(man->coFactorFalse(f)),man->True());
+	CPPUNIT_ASSERT_EQUAL(man->coFactorFalse(man->coFactorTrue(f)),man->True());
 
 }
 
@@ -180,11 +192,23 @@ void ManagerTest::negTest(void)
 
 void ManagerTest::nand2Test(void)
 {
-	
+	unsigned a=man->createVar("a");
+  	unsigned b=man->createVar("b");
+  	unsigned f=man->nand2(a,b);
+	CPPUNIT_ASSERT_EQUAL(man->coFactorTrue(man->coFactorTrue(f)),man->False());
+  	CPPUNIT_ASSERT_EQUAL(man->coFactorFalse(f),man->True());
+	CPPUNIT_ASSERT_EQUAL(man->coFactorTrue(man->coFactorFalse(f)),man->True());
 }
 
 void ManagerTest::nor2Test(void)
 {
+	unsigned a=man->createVar("a");
+  	unsigned b=man->createVar("b");
+	unsigned c=man->neg(b);
+  	unsigned f=man->nor2(a,b);
+	CPPUNIT_ASSERT_EQUAL(man->coFactorFalse(man->coFactorFalse(f)),man->True());
+  	CPPUNIT_ASSERT_EQUAL(man->coFactorTrue(f),man->False());
+	CPPUNIT_ASSERT_EQUAL(man->coFactorFalse(man->coFactorTrue(f)),man->False());
 
 }
 
