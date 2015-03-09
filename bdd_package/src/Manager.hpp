@@ -26,6 +26,8 @@ private:
 	unsigned nextID;
 	const unsigned low=1;
 	const unsigned high=2;
+	unsigned getSortedID(unsigned,unsigned,unsigned);
+	unsigned invert(unsigned);
 	uniqueTableType uniqueTable;
 
 public:
@@ -49,9 +51,9 @@ public:
 	unsigned nand2(const unsigned,const unsigned);
 	unsigned nor2(const unsigned,const unsigned);
 	string getTopVarName(const unsigned&);
-	void findNodes(const unsigned&,set<unsigned>&);
-	void findVars(const unsigned&,set<unsigned>&);
-	void printTable() const;
+	set<unsigned> findNodes(const unsigned&);
+	set<size_t> findVars(const unsigned&);
+  	void printTable() const;
 
 };
 
