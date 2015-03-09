@@ -319,24 +319,26 @@ string Manager::getTopVarName(const unsigned& f)
 
 void Manager::findNodes(const unsigned& f,set<unsigned>& list)
 {	
-	list.insert(it->first.low);
-	list.insert(it->first.high);
+	list.insert((unsigned)1);
+	list.insert((unsigned)2);
 	for(auto it=uniqueTable.begin();it != uniqueTable.end() ;it++)
 	{		
-		while(it->second<=f)
+		while(it->second <= f)
 		{
 			list.insert(it->second);
 		}
 	}	
 }
 
-void Manager::findVars(const unsigned& f,set<unsigned>& list)
+void Manager::findVars(const unsigned& f,set<size_t>& list)
 {
 	for(auto it=uniqueTable.begin();it != uniqueTable.end() ;it++)
 	{		
-		while(it->second<=f)
+		while(it->second <= f)
 		{
-			list.emplace(it->first.var);
+			for (auto res=list.begin(); res!=list.end(); res++)
+				if (res==list.end())
+					list.insert(it->first.var);
 		}
 	}
 }
