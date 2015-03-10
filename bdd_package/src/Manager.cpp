@@ -21,26 +21,22 @@ Manager::~Manager()
 
 unsigned Manager::createVar(const string& varName)
 {
-  bool isAvailable=false;
-  unsigned presentID;
+			
   BDD_ID tmp(varName,low,high);
-  for(auto& itr : uniqueTable)
-  {
-	BDD_ID k((BDD_ID)(itr.first));
-	if(uniqueTable.key_eq()(k,tmp))
-	{
-		isAvailable=true;
-		presentID=itr.second;
-	}
-  }
-  if(!isAvailable)
+  
+  //check if a variable is added with same name before
+  auto itr=uniqueTable.find(tmp);
+  
+  //if this is the first time with the varName argument,then add it to the unique table and increment nextID
+  if(itr == uniqueTable.end())
   {
 	nextID+=1;
     pair<BDD_ID,unsigned> elem(tmp,nextID);
     uniqueTable.insert(elem);
   }
+  //if a variable with varName has been created before,return its ID
   else
-	return presentID;
+	return itr->second;
   return nextID;
 
 }
@@ -72,34 +68,37 @@ unsigned Manager::topVar(const unsigned& node) // Root Node Id
 
 unsigned Manager::coFactorTrue(const unsigned f,const unsigned g)
 {
-	if(isConstant(f)) 
+	
+	if(isConstant(f)) //formally,this is the case: <0,1> cofactorTrue g,which is equal to <0,1>
 		return f; 
 	else 
 	{ 
-      if(f==g) 
+      if(f==g) 			// f cofactor f,which is equal to right edge of f
 			return coFactorTrue(f); 
       else if(f<g) 
-		return f; 
-      else 
-	  {
-	  	unsigned cft,cff;
-		if(getTopVarName(f)==getTopVarName(g))
+		return f; 		//if f is independent of g,return f. Making the following implication is valid,since variables are ordered: f<g -> f is independent of g
+      else 	//this is the challenging case :=) finding the cofactor of f with one of its variables,but in a lower index.
+	  {		//formally,this equals to find cofactorTrue(f,g) where index(g) < index(f) = ite(topVar(f),right edge of f w.r.t g,left edge of f w.r.t g
+	  	unsigned cft,cff;	
+		if(getTopVarName(f)==getTopVarName(g))	//NOTE: this line might be buggy in case of following call: coFactorTrue(f,NOT(f)). It should be checked in unit tests. 
 			return coFactorTrue(f);
-		cft=coFactorTrue(coFactorTrue(f),g);
+		cft=coFactorTrue(coFactorTrue(f),g);	
 		cff=coFactorTrue(coFactorFalse(f),g);
 		BDD_ID tmp(getTopVarName(f),cff,cft);
-		BDD_ID negTmp(tmp);
+		BDD_ID negTmp(tmp);						// a special treatment for negated values are needed,since they share the same top variable name
 		negTmp.low=cft;
 		negTmp.high=cff;
-		auto itr=uniqueTable.find(negTmp);
+		auto itr=uniqueTable.find(negTmp);		//if there is a negated version of f(which is not intended to return),simply return f
 		if(itr!=uniqueTable.end() )
 			return f;
 		else
-			return ite(uniqueTable[tmp],cft,cff);
+			return ite(uniqueTable[tmp],cft,cff); //otherwise,calculate the use the cofactors calculated as described above and call ite
 	  }
     } 	
 }
 
+
+//basically the same functionality with coFactorTrue,but the reverse
 unsigned Manager::coFactorFalse(const unsigned f,const unsigned g)
 {
 
@@ -138,6 +137,8 @@ unsigned Manager::coFactorTrue(const unsigned f) // T CoFactor of f
 	unsigned high;
 	if(isConstant(f))
 		return f;
+		
+	//since we do not hold a pointer to each node as it is in a DAG,table has to be traversed to find corresponding key and get the high value from it
 	else
 	{
 		for(auto it=uniqueTable.begin();it != uniqueTable.end();it++)
@@ -175,9 +176,9 @@ unsigned Manager::coFactorFalse(const unsigned f) // E CoFactor of f
 	return low;
 }
 
+//just a helper function for debugging
 void Manager::printTable() const
 {
-  
   unsigned tmpID;
   cout<<"Variable\tLow\tHigh\tID\t"<<endl;
   for (auto it=uniqueTable.begin();it!=uniqueTable.end();it++)
@@ -188,6 +189,7 @@ void Manager::printTable() const
     }
 }
 
+//ITE function is implemented by adhering to the textbook as much as possible. Even not line by line,function carries out the exact same functionality,except computed table.
 unsigned Manager::ite(const unsigned f,const unsigned g,const unsigned h)
 {
   if(f==True())      
@@ -199,7 +201,7 @@ unsigned Manager::ite(const unsigned f,const unsigned g,const unsigned h)
   else 
     { 
       
-      unsigned x=getSortedID(topVar(f),topVar(g),topVar(h));
+      unsigned x=getSortedID(topVar(f),topVar(g),topVar(h));		//sort the top variables,since this is R'O'BDD,not RBDD
       unsigned t=ite(coFactorTrue(f,x),coFactorTrue(g,x),coFactorTrue(h,x)); 
       unsigned e=ite(coFactorFalse(f,x),coFactorFalse(g,x),coFactorFalse(h,x)); 
 
@@ -207,7 +209,7 @@ unsigned Manager::ite(const unsigned f,const unsigned g,const unsigned h)
        	return t; 
 	  BDD_ID tmp(getTopVarName(x),e,t);
 	  auto res=uniqueTable.find(tmp);
-	  if(res==uniqueTable.end())
+	  if(res==uniqueTable.end())		//these lines correspond to find or add into unique table
 	  {
 		nextID += 1; 
 		pair<BDD_ID,unsigned> elem(tmp,nextID); 
@@ -226,17 +228,7 @@ unsigned Manager::ite(const unsigned f,const unsigned g,const unsigned h)
 
 unsigned Manager::and2(const unsigned f,const unsigned g)
 {
-  if(isConstant(f) || isConstant(g))
-    {
-      if(f == False() || g == False())
-	return False();
-      else if(f==True())
-	return g;
-      else if(g==True())
-	return f;
-      else
-	{}
-    }
+
   if(coFactorTrue(f)==coFactorFalse(g) && coFactorFalse(f)==coFactorTrue(g))		//check in g=not(f) without calling neg
 	return False();
   return ite(f,g,False());
@@ -244,18 +236,6 @@ unsigned Manager::and2(const unsigned f,const unsigned g)
 
 unsigned Manager::or2(const unsigned f,const unsigned g)
 {
-  if(isConstant(f) || isConstant(g))
-  {
-    if(f==True() || g==True())
-      return True();
-    else if(f==False())
-      return g;
-    else if(g==False())
-      return f;
-    else
-      {}
-  }
-
   if(coFactorTrue(f)==coFactorFalse(g) && coFactorFalse(f)==coFactorTrue(g))		//check in g=not(f) without calling neg
 	return True();	
   return ite(f,True(),g);
@@ -306,7 +286,8 @@ string Manager::getTopVarName(const unsigned& f)
 
 unsigned Manager::getSortedID(unsigned f,unsigned g, unsigned h)
 {
-	
+		//we do not check for terminal nodes with isConstant function here in the loop below;
+		//because an ite function with terminal nodes(or cases) cannot(shouldn't!!) made it to this branch in control flow
 	vector<BDD_ID> list;
 
 	for(auto& itr: uniqueTable)
