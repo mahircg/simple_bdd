@@ -18,38 +18,49 @@ void ManagerTest::constructorTest(void)
 }
 
 void ManagerTest::createVarTest(void)
-{	
+{
   	unsigned a = man->createVar("x");
   	unsigned b = man->createVar("y");
-  	CPPUNIT_ASSERT(a != b); //no two variables have the same id
-  	CPPUNIT_ASSERT(a != (unsigned)2); // id of a var cannot be 2
-	CPPUNIT_ASSERT(a != (unsigned)1); // id of a var cannot be 1
 	unsigned c = man->createVar("x");
-	CPPUNIT_ASSERT_EQUAL(c,a); //every different key should be mapped into a unique id
+
+	//no two variables have the same id
+  	CPPUNIT_ASSERT(a != b);
+
+	//createVar shall not return 
+  	CPPUNIT_ASSERT(a!=man->True() || a!=man->False()); constant
+  	
+	//every different key should be mapped into a unique id
+  	CPPUNIT_ASSERT_EQUAL(c,a);
+  
 }
 
 void ManagerTest::trueTest(void)
 {
   	const unsigned t=man->True();
-  	CPPUNIT_ASSERT_EQUAL(t,(const unsigned)2);	//ID for terminal node TRUE
+	//ID for terminal node TRUE
+  	CPPUNIT_ASSERT_EQUAL(t,(const unsigned)2);
 }
 
 void ManagerTest::falseTest(void)
 {
   	const unsigned e=man->False();
-  	CPPUNIT_ASSERT_EQUAL(e,(const unsigned)1);	//ID for terminal node FALSE
+	//ID for terminal node FALSE
+  	CPPUNIT_ASSERT_EQUAL(e,(const unsigned)1);
 }
 
-void ManagerTest::isConstantTest(void) 
+void ManagerTest::isConstantTest(void)
 {
 	unsigned t=man->True();
-        unsigned e=man->False();
+    	unsigned e=man->False();
 	unsigned a=man->createVar("a");
+	
 	CPPUNIT_ASSERT_EQUAL(man->isConstant(t),true);
-        CPPUNIT_ASSERT_EQUAL(man->isConstant(e),true);
-	CPPUNIT_ASSERT_EQUAL(man->isConstant(a),false);
+    	CPPUNIT_ASSERT_EQUAL(man->isConstant(e),true);
+	CPPUNIT_ASSERT_EQUAL(man->isConstant(a),false);//check for a variable
+
 	//result of 1 and 0: a check for and2 function in the meantime
 	CPPUNIT_ASSERT_EQUAL(man->isConstant(man->and2(t,e)),true);
+
 	//result of 1 or 0: a check for or2 function in the meantime
 	CPPUNIT_ASSERT_EQUAL(man->isConstant(man->or2(t,e)),true);
 }
@@ -58,30 +69,25 @@ void ManagerTest::isVariableTest(void)
 {
   	unsigned a=man->createVar("a");
   	unsigned b=man->createVar("b");
-	unsigned t=man->True();
   	unsigned f=man->or2(a,b);
-	unsigned g=man->and2(f,man->False());
-	//check if createVar returns variables
-	CPPUNIT_ASSERT_EQUAL(man->isVariable(a),true);
-  	CPPUNIT_ASSERT_EQUAL(man->isVariable(b),true);
-	CPPUNIT_ASSERT_EQUAL(man->isVariable(t),false);
-	//output of an operation,shouldn't return constant
-  	CPPUNIT_ASSERT_EQUAL(man->isVariable(f),true);
+  	unsigned g=man->and2(f,man->False());
+  	
 	//result of 0.(a+b) should return constant
-	CPPUNIT_ASSERT_EQUAL(man->isVariable(g),false);
-	
+  	CPPUNIT_ASSERT_EQUAL(man->isVariable(g),false);		
+
+	//output of an operation,should return constant
+  	CPPUNIT_ASSERT_EQUAL(man->isVariable(f),true);		
+  
+  	//check if createVar returns variables
+  	CPPUNIT_ASSERT_EQUAL(man->isVariable(a),true);		
+  	CPPUNIT_ASSERT_EQUAL(man->isVariable(b),true);
+ 
 }
 
 void ManagerTest::topVarTest(void)
 {
-	unsigned c=man->createVar("c");
-	CPPUNIT_ASSERT_EQUAL(man->topVar(c), (unsigned)3);
-	unsigned d=man->createVar("d");
-	CPPUNIT_ASSERT_EQUAL(man->topVar(d), (unsigned)4);
-	unsigned t=man->True();
-	CPPUNIT_ASSERT_EQUAL(man->topVar(t), (unsigned)2);
-        unsigned e=man->False();
-	CPPUNIT_ASSERT_EQUAL(man->topVar(e), (unsigned)1);
+	
+	
 }
 
 void ManagerTest::coFactorWithTopTrueTest(void)
@@ -91,26 +97,24 @@ void ManagerTest::coFactorWithTopTrueTest(void)
 	unsigned c=man->createVar("c");
 	unsigned f=man->and2(a,c);
 	unsigned g=man->and2(b,c);
-	//---unsigned h=man->or2(f,g);
-	//co-factor of h(a,b,c)=ac+bc with c,result should be a+b
-	//---CPPUNIT_ASSERT_EQUAL(man->coFactorTrue(h,c),man->or2(a,b));
-	//get co-factor of f with a,result should be c
-	//CPPUNIT_ASSERT_EQUAL(man->coFactorTrue(f,a),c);
-	//get co-factor of f with c,result should be a
-	//CPPUNIT_ASSERT_EQUAL(man->coFactorTrue(f,c),a);
+	unsigned h=man->or2(f,g);
+	CPPUNIT_ASSERT_EQUAL(man->coFactorTrue(h,c),man->or2(a,b));		// get co-factor of h(a,b,c)=ac+bc with c,result should be a+b
+	CPPUNIT_ASSERT_EQUAL(man->coFactorTrue(f,a),c);					//get co-factor of f with a,result should be c
+	CPPUNIT_ASSERT_EQUAL(man->coFactorTrue(f,c),a);					//get co-factor of f with c,result should be a
 }
 
 void ManagerTest::coFactorWithTopFalseTest(void)
 {
-	//unsigned a=man->createVar("a");
-	//unsigned b=man->createVar("b");
-	//unsigned c=man->createVar("c");
-	//unsigned f=man->and2(a,c);
-	//CPPUNIT_ASSERT_EQUAL(man->coFactorFalse(f,b),f);
-	//CPPUNIT_ASSERT_EQUAL(man->coFactorFalse(f,a),man->False());
-	//unsigned g=man->and2(b,c);
-	//unsigned h=man->or2(f,g);
-	//CPPUNIT_ASSERT_EQUAL(man->coFactorFalse(h,c),man->False());
+	unsigned a=man->createVar("a");
+	unsigned b=man->createVar("b");
+	unsigned c=man->createVar("c");
+	unsigned f=man->and2(a,c);
+	CPPUNIT_ASSERT_EQUAL(man->coFactorFalse(f,b),f);
+	CPPUNIT_ASSERT_EQUAL(man->coFactorFalse(f,c),man->False());
+	unsigned g=man->and2(b,c);
+	unsigned h=man->or2(f,g);
+	unsigned i=man->coFactorFalse(h,c);
+	CPPUNIT_ASSERT_EQUAL(i,man->False());
 }
 
 void ManagerTest::coFactorTrueTest(void)
@@ -141,7 +145,7 @@ void ManagerTest::coFactorFalseTest(void)
 
 void ManagerTest::iteTest(void)
 {
-	//Testing Terminal Cases:
+	  //Testing Terminal Cases:
 	unsigned  a=man->createVar("a");
 	unsigned  b=man->createVar("b");
 	unsigned  c=man->createVar("c");
@@ -150,10 +154,10 @@ void ManagerTest::iteTest(void)
 	unsigned  g=man->and2(a,c);
 	unsigned  h=man->or2(b,d);
 	//Testing Terminal Cases:
-	CPPUNIT_ASSERT_EQUAL(man->ite(man->False(),g,h),h); 		// ite(0,g,h) = h
-	CPPUNIT_ASSERT_EQUAL(man->ite(man->True(),g,h),g); 		// ite(1,g,h) = g
-	CPPUNIT_ASSERT_EQUAL(man->ite(f,g,g),g); 			// ite(f,g,g) = g
-	CPPUNIT_ASSERT_EQUAL(man->ite(f,man->True(),man->False()),f); 	// ite(f,1,0) = f
+	CPPUNIT_ASSERT_EQUAL(man->ite(man->False(),g,h),h); // ite(0,g,h) = h
+	CPPUNIT_ASSERT_EQUAL(man->ite(man->True(),g,h),g); // ite(1,g,h) = g
+	CPPUNIT_ASSERT_EQUAL(man->ite(f,g,g),g); 	// ite(f,g,g) = g
+	CPPUNIT_ASSERT_EQUAL(man->ite(f,man->True(),man->False()),f); // ite(f,1,0) = f
 	CPPUNIT_ASSERT_EQUAL(man->ite(f,man->False(),man->True()),man->neg(f)); // ite(f,0,1) = neg(f)
 	//Testing Recursive Cases:
 	
@@ -161,12 +165,12 @@ void ManagerTest::iteTest(void)
 
 void ManagerTest::and2Test(void)
 {
-  	unsigned a=man->createVar("a");
+  unsigned a=man->createVar("a");
   	unsigned b=man->createVar("b");
 	unsigned c=man->createVar("c");
   	unsigned f=man->and2(a,c);
 	unsigned g=man->and2(b,c);
-	//unsigned h=man->or2(f,g);
+	unsigned h=man->or2(f,g);
 
   	CPPUNIT_ASSERT_EQUAL(man->coFactorTrue(f),c);
 	CPPUNIT_ASSERT_EQUAL(man->coFactorTrue(man->coFactorTrue(f)),man->True());
@@ -182,11 +186,12 @@ void ManagerTest::and2Test(void)
 	//check right of g=a.c,should equal to c
   	CPPUNIT_ASSERT_EQUAL(man->coFactorTrue(g),c);
 	//check right of h=f+g,should be equal to c
-  	//---CPPUNIT_ASSERT_EQUAL(man->coFactorTrue(h),c);
+  	CPPUNIT_ASSERT_EQUAL(man->coFactorTrue(h),c);
 	//check left of h,should be equal to g=b.c	
-  	//---CPPUNIT_ASSERT_EQUAL(man->coFactorFalse(h),g);
+  	CPPUNIT_ASSERT_EQUAL(man->coFactorFalse(h),g);
 	//check left of c.(ac+bc),result would be the same	
-  	//---CPPUNIT_ASSERT_EQUAL(man->coFactorFalse(man->and2(h,c)),g);
+  	CPPUNIT_ASSERT_EQUAL(man->coFactorFalse(man->and2(h,c)),g);
+ 
 }
 
 void ManagerTest::or2Test(void)
@@ -195,7 +200,6 @@ void ManagerTest::or2Test(void)
   	unsigned b=man->createVar("b");
 	unsigned c=man->createVar("c");
   	unsigned f=man->or2(a,b);
-	unsigned i=man->and2(f,c);
 	
   	unsigned g=man->or2(man->False(),f);
   	unsigned h=man->or2(g,man->True());
@@ -208,9 +212,7 @@ void ManagerTest::or2Test(void)
 	CPPUNIT_ASSERT_EQUAL(man->coFactorFalse(f),b);
   	CPPUNIT_ASSERT_EQUAL(man->coFactorTrue(f),man->True());
   	CPPUNIT_ASSERT_EQUAL(f,g);
-  	CPPUNIT_ASSERT_EQUAL(h,man->True());
-  	CPPUNIT_ASSERT_EQUAL(man->coFactorTrue(i),man->or2(a,b));
-  	CPPUNIT_ASSERT_EQUAL(man->coFactorFalse(i),man->and2(b,c));	
+  	CPPUNIT_ASSERT_EQUAL(h,man->True());	
 }
 
 void ManagerTest::xorTest(void)
@@ -226,7 +228,7 @@ void ManagerTest::xorTest(void)
 }
 
 void ManagerTest::negTest(void)
-{	
+{
 	unsigned x=man->createVar("x");
 	unsigned xNeg=man->neg(x);
 	//check right of not(x)
@@ -255,7 +257,6 @@ void ManagerTest::negTest(void)
 	CPPUNIT_ASSERT_EQUAL(man->coFactorFalse(man->coFactorFalse(g)),man->True());
   	CPPUNIT_ASSERT_EQUAL(man->coFactorTrue(g),man->False());
 	CPPUNIT_ASSERT_EQUAL(man->coFactorFalse(man->coFactorTrue(g)),man->False());
-
 }
 
 void ManagerTest::nand2Test(void)
@@ -273,7 +274,6 @@ void ManagerTest::nor2Test(void)
 {
 	unsigned a=man->createVar("a");
   	unsigned b=man->createVar("b");
-	//unsigned c=man->neg(b);
   	unsigned f=man->nor2(a,b);
 	//man->printTable();
 	CPPUNIT_ASSERT_EQUAL(man->coFactorFalse(man->coFactorFalse(f)),man->True());
@@ -286,12 +286,13 @@ void ManagerTest::getTopVarNameTest(void)
 	unsigned a=man->createVar("a");
   	unsigned b=man->createVar("b");
 	unsigned c=man->createVar("c");
-  	unsigned f=man->or2(a,b);
+  	unsigned f=man->and2(a,c);
 	unsigned g=man->and2(b,c);
-	//man->printTable();
+	unsigned h=man->or2(f,g);
 	CPPUNIT_ASSERT_EQUAL(man->getTopVarName(a)[0],'a');
 	CPPUNIT_ASSERT_EQUAL(man->getTopVarName(f)[0],'a');
 	CPPUNIT_ASSERT_EQUAL(man->getTopVarName(g)[0],'b');
+	CPPUNIT_ASSERT_EQUAL(man->getTopVarName(h)[0],'a');
 }
 
 void ManagerTest::findNodesTest(void)
@@ -299,9 +300,12 @@ void ManagerTest::findNodesTest(void)
 	unsigned a=man->createVar("a");
   	unsigned b=man->createVar("b");
 	unsigned c=man->createVar("c");
-  	unsigned f=man->or2(a,b);
+  	unsigned f=man->and2(a,c);
+	unsigned g=man->and2(b,c);
+	unsigned h=man->or2(f,g);
+	unsigned d=man->and2(a,b);
+	unsigned list={};
 	man->printTable();
-	CPPUNIT_ASSERT_EQUAL(man->findNodes(f),4);
 }
   
 void ManagerTest::findVarsTest(void)

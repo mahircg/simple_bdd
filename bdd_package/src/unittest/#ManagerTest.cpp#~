@@ -99,7 +99,7 @@ void ManagerTest::and2Test(void)
   
    CPPUNIT_ASSERT_EQUAL(man->coFactorTrue(f),b);
   CPPUNIT_ASSERT_EQUAL(man->coFactorFalse(f),man->False());
-  CPPUNIT_ASSERT_EQUAL(man->coFactorFalse(h),);
+  CPPUNIT_ASSERT_EQUAL(g,man->False());
 }
 
 void ManagerTest::or2Test(void)

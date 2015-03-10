@@ -3,6 +3,7 @@
  *
  * \brief Tests for Manager class 
  */
+ 
  #ifndef HPP_MANAGERTEST
  #define HPP_MANAGERTEST
  

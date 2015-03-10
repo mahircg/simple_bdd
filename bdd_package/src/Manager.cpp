@@ -73,19 +73,26 @@ unsigned Manager::coFactorTrue(const unsigned f,const unsigned g)
 		return f; 
 	else 
 	{ 
-      if(f==g) 
+      		if(f==g) 
 			return coFactorTrue(f); 
-      else if(f<g) 
-		return f; 
-      else 
-	  {
-	  	unsigned cft,cff;
-		if(getTopVarName(f)==getTopVarName(g))
-			return coFactorTrue(f);
-		cft=coFactorTrue(coFactorTrue(f),g);
-		cff=coFactorTrue(coFactorFalse(f),g);
-		BDD_ID tmp(getTopVarName(f),cff,cft);
-		return ite(uniqueTable[tmp],cft,cff);
+      		else if(f<g) 
+			return f; 
+      		else 
+	  	{
+	  		unsigned cft,cff;
+			if(getTopVarName(f)==getTopVarName(g))
+				return coFactorTrue(f);
+			cft=coFactorTrue(coFactorTrue(f),g);
+			cff=coFactorTrue(coFactorFalse(f),g);
+			BDD_ID tmp(getTopVarName(f),cff,cft);
+			BDD_ID negTmp(tmp);
+			negTmp.low=cft;
+			negTmp.high=cff;
+			auto itr=uniqueTable.find(negTmp);
+			if(itr!=uniqueTable.end())
+				return f;
+			else
+				return ite(uniqueTable[tmp],cft,cff);
 	  }
     } 	
 }
@@ -103,14 +110,21 @@ unsigned Manager::coFactorFalse(const unsigned f,const unsigned g)
 			return f; 
 		else
 		{
-			unsigned cft,cff;
+	  		unsigned cft,cff;
 			if(getTopVarName(f)==getTopVarName(g))
-				return coFactorFalse(f);
+				return coFactorTrue(f);
 			cft=coFactorFalse(coFactorTrue(f),g);
 			cff=coFactorFalse(coFactorFalse(f),g);
 			BDD_ID tmp(getTopVarName(f),cff,cft);
-			return ite(uniqueTable[tmp],cft,cff);
-		}
+			BDD_ID negTmp(tmp);
+			negTmp.low=cft;
+			negTmp.high=cff;
+			auto itr=uniqueTable.find(negTmp);
+			if(itr!=uniqueTable.end())
+				return f;
+			else
+				return ite(uniqueTable[tmp],cft,cff);
+	  }
     } 
 
 }
@@ -336,9 +350,9 @@ void Manager::findVars(const unsigned& f,set<size_t>& list)
 	{		
 		while(it->second <= f)
 		{
-			for (auto res=list.begin(); res!=list.end(); res++)
+			for (auto res=list.begin();res != list.end() ;res++)
 				if (res==list.end())
-					list.insert(it->first.var);
+					list.insert(it->first.var[0]);
 		}
 	}
 }
