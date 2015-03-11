@@ -194,9 +194,27 @@ public:
 	 */
 	string getTopVarName(const unsigned&);
 	
+	/**
+	 * \brief Fills the set with all nodes for the function associated with root node
+	 * \param f ID of top variable of f, set list to be filled up
+	 * Function searches the unique table for nodes.
+	 * The nodes are searched according to their dependencies to other nodes
+	 */
 	void findNodes(const unsigned&,set<unsigned>&);
+
+	/**
+	 * \brief Fills the set with all variables a function depends on
+	 * \param f ID of top variable of f, set list to be filled up
+	 * Function searches the unique table for variables.
+	 * The variables are searched according to their dependencies to other variables.
+	 * Multiple occurencies of variables a ignored, only first occurence is stored in set.
+	 */
 	void findVars(const unsigned&,set<size_t>&);
-  void printTable() const;
+
+	/**
+	 * \brief Function for debugging.
+	 */
+  	void printTable() const;
 
 };
 
