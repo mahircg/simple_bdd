@@ -316,7 +316,6 @@ void Manager::findNodes(const unsigned& f,set<unsigned>& list)
 	unsigned ll=min(coFactorTrue(id),coFactorFalse(id));
 	unsigned hh=max(coFactorTrue(id),coFactorFalse(id));
 	BDD_ID tmp(getTopVarName(id),coFactorFalse(id),coFactorTrue(id));
-	int count=0;
 	while (id>2)
 	{
 		for(auto itr=uniqueTable.begin();itr != uniqueTable.end();itr++)
@@ -329,7 +328,6 @@ void Manager::findNodes(const unsigned& f,set<unsigned>& list)
 					if (id==ll)
 						ll=hh;
 					hh=min(min(itr->first.low,itr->first.high),ll);
-					count++;
 				}
 			}
 	}
@@ -342,7 +340,6 @@ void Manager::findVars(const unsigned& f,set<size_t>& list)
 	unsigned ll=min(coFactorTrue(id),coFactorFalse(id));
 	unsigned hh=max(coFactorTrue(id),coFactorFalse(id));
 	BDD_ID tmp(getTopVarName(id),coFactorFalse(id),coFactorTrue(id));
-	int count=0;
 	while (id>2)
 	{
 		for(auto itr=uniqueTable.begin();itr != uniqueTable.end();itr++)
@@ -355,7 +352,6 @@ void Manager::findVars(const unsigned& f,set<size_t>& list)
 					if (id==ll)
 						ll=hh;
 					hh=min(min(itr->first.low,itr->first.high),ll);
-					count++;
 				}
 			}
 	}
