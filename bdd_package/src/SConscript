@@ -3,7 +3,7 @@ Import('env','instdir')
 
 # create static library for the Fraction class
 # this library will be used to create the executable for testing purposes
-library = env.Library(target = "Manager", source = ['Manager.cpp'])
+library = env.Library(target = "libBDD", source = ['BDD_ID.cpp','Manager.cpp'])
 
 # define location where the library will be installed
 libdir = instdir + "/lib"

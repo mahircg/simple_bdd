@@ -1,69 +1,40 @@
 #include "BDD_ID.hpp"
 
 
-bool Node::operator==(const BDD_ID& rhs) const
+bool BDD_ID::operator==(const BDD_ID& rhs) const
 {
-	return (this->variable==rhs->variable) && (this->left->id==rhs->left->id) && (this->right->id==rhs->right->id);
+  return (this->var==rhs.var) && (this->low==rhs.low) && (this->high==rhs.high);
 }
 
-bool Node::operator!=(const BDD_ID& rhs) const
+BDD_ID::BDD_ID(const string var,unsigned low,unsigned high):var(var),low(low),high(high)
 {
-	return !(*this==rhs);
 }
 
-
-Node::operator string() const
+BDD_ID::BDD_ID(const BDD_ID& rhs)
 {
-	return to_string(static_cast<long long>(id));
+	this->var=rhs.var;
+	this->low=rhs.low;
+	this->high=rhs.high;
 }
 
-void Node::setID(unsigned id)
+bool BDD_ID::operator<(const BDD_ID& rhs) const
 {
-	this->id = id;
+	return this->var[0] < rhs.var[0];
 }
 
-unsigned Node::getID()
+bool BDD_ID::operator<=(const BDD_ID& rhs) const
 {
-	return id;
+	return this->var[0] <= rhs.var[0];
 }
 
-
-
-ostream& operator<<(ostream& osObject,const BDD_ID &bddObj)
+bool BDD_ID::operator>(const BDD_ID& rhs) const
 {
-	osObject<<bddObj.variable<<" -> "<<static_cast<string>(*(bddObj.low))<<"|"<<static_cast<string>(*(bddObj.high));
-	return osObject;
+	return this->var[0] > rhs.var[0];
 }
 
-
-
-Node::Node(unsigned id):id(id){};
-
-BDD_ID::operator string()
+bool BDD_ID::operator >= (const BDD_ID& rhs) const
 {
-	return variable;
-}
-BDD_ID::BDD_ID(string variable,unsigned id):Node(id), variable(variable) {};
-
-BDD_ID::BDD_ID(string variable,unsigned id,Node* t,Node* e):Node(id), variable(variable) 
-{
-	low=e;
-	high=t;
+	return this->var[0] >= rhs.var[0];
 }
 
 
-BDD_ID::BDD_ID(string variable,unsigned id,Node& t,Node& e):Node(id), variable(variable) 
-{
-	low=&e;
-	high=&t;
-}
-
-void BDD_ID::setLow(class Node& e)
-{
-	low=&e;
-}
-
-void BDD_ID::setHigh(class Node& t)
-{
-	high=&t;
-}

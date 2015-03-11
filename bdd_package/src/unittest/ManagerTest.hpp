@@ -38,6 +38,7 @@
 	CPPUNIT_TEST(getTopVarNameTest);
 	CPPUNIT_TEST(findNodesTest);
 	CPPUNIT_TEST(findVarsTest);
+	CPPUNIT_TEST_SUITE_END();
 	
 public:
 	void setUp(void);
@@ -62,14 +63,12 @@ public:
 	void nand2Test(void);
 	void nor2Test(void);
 	void getTopVarNameTest(void);
-	void findNodeTest(void);
+	void findNodesTest(void);
 	void findVarsTest(void);
 	
 private:
-	BDD_ID *a;
-	BDD_ID *b;
-	BDD_ID *c;
-	BDD_ID *d;
-	Manager *man;
 
+	Manager *man;
  };
+
+#endif
