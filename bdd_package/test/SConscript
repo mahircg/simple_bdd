@@ -4,7 +4,7 @@ Import('env')
 # create executable for testing, note that:
 # the library for the 'Fraction class is linked (libFraction located in '../src/')
 # FranctionTest object is also linked ('../src/unittest/ManagerTest.o')
-program = env.Program(target = "testrunner", source = ['testrunner.cpp', '../src/unittest/ManagerTest.o'], LIBS=['cppunit','libManager'], LIBPATH='../src/')
+program = env.Program(target = "testrunner", source = ['testrunner.cpp', '../src/unittest/ManagerTest.o'], LIBS=['cppunit','libBDD'], LIBPATH='../src/')
 
 # make sure that the tests can be run
 # for that on the root directory (directory with the Sconstruct file)
