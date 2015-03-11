@@ -173,7 +173,7 @@ void ManagerTest::iteTest(void)
 	unsigned  f=man->or2(a,b);
 	unsigned  g=man->and2(a,c);
 	unsigned  h=man->or2(b,d);
-
+	man->printTable();
 	// ite(0,g,h) = h
 	CPPUNIT_ASSERT_EQUAL(man->ite(man->False(),g,h),h); 
 	// ite(1,g,h) = g

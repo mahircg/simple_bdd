@@ -308,55 +308,11 @@ unsigned Manager::getSortedID(unsigned f,unsigned g, unsigned h)
 	
 }
 
-
-
 void Manager::findNodes(const unsigned& f,set<unsigned>& list)
-{	
-	unsigned id=f;
-	unsigned ll=min(coFactorTrue(id),coFactorFalse(id));
-	unsigned hh=max(coFactorTrue(id),coFactorFalse(id));
-	BDD_ID tmp(getTopVarName(id),coFactorFalse(id),coFactorTrue(id));
-	int count=0;
-	while (id>2)
-	{
-		for(auto itr=uniqueTable.begin();itr != uniqueTable.end();itr++)
-			{
-				if(itr->second==id)
-				{
-					list.insert(itr->second);
-					id=max(max(itr->first.low,itr->first.high),ll);
-					ll=max(min(itr->first.low,itr->first.high),ll);
-					if (id==ll)
-						ll=hh;
-					hh=min(min(itr->first.low,itr->first.high),ll);
-					count++;
-				}
-			}
-	}
-	list.insert(2); list.insert(1);
+{
 }
 
-void Manager::findVars(const unsigned& f,set<size_t>& list)
-{	
-	unsigned id=f;
-	unsigned ll=min(coFactorTrue(id),coFactorFalse(id));
-	unsigned hh=max(coFactorTrue(id),coFactorFalse(id));
-	BDD_ID tmp(getTopVarName(id),coFactorFalse(id),coFactorTrue(id));
-	int count=0;
-	while (id>2)
-	{
-		for(auto itr=uniqueTable.begin();itr != uniqueTable.end();itr++)
-			{
-				if(itr->second==id)
-				{
-					list.insert(itr->first.var[0]);
-					id=max(max(itr->first.low,itr->first.high),ll);
-					ll=max(min(itr->first.low,itr->first.high),ll);
-					if (id==ll)
-						ll=hh;
-					hh=min(min(itr->first.low,itr->first.high),ll);
-					count++;
-				}
-			}
-	}
+void Manager::findVars(const unsigned& f,set<unsigned>& list)
+{
 }
+

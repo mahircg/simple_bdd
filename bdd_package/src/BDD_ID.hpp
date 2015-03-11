@@ -19,8 +19,9 @@ using namespace std;
 
 struct BDD_ID
 {
-	unsigned low,high;
-	string var;
+	unsigned low;	/*!< Left edge of a variable */
+	unsigned high;  /*!< Right edge of a variable */
+	string var;		/*!< Top variable of a node,see BDD_Hash class documentation for more details */
   
 	/**
 	 * \brief Equality operator
