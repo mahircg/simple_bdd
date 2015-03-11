@@ -95,7 +95,7 @@ void ManagerTest::topVarTest(void)
 	unsigned f=man->and2(a,c);
 	unsigned g=man->and2(b,c);
 	unsigned h=man->or2(f,g);
-	man->printTable();
+
 	CPPUNIT_ASSERT_EQUAL(man->topVar(t),(unsigned)2);
 	CPPUNIT_ASSERT_EQUAL(man->topVar(a),(unsigned)3);
 	CPPUNIT_ASSERT_EQUAL(man->topVar(b),(unsigned)4);
@@ -166,11 +166,10 @@ void ManagerTest::iteTest(void)
 	unsigned  b=man->createVar("b");
 	unsigned  c=man->createVar("c");
 	unsigned  d=man->createVar("d");
-	unsigned  f=man->and2(a,b);
+	unsigned  f=man->or2(a,b);
 	unsigned  g=man->and2(a,c);
-	unsigned  h=man->or2(f,g);
-
-	//========Testing Terminal Cases:
+	unsigned  h=man->or2(b,d);
+	man->printTable();
 	// ite(0,g,h) = h
 	CPPUNIT_ASSERT_EQUAL(man->ite(man->False(),g,h),h); 
 	// ite(1,g,h) = g
@@ -180,14 +179,12 @@ void ManagerTest::iteTest(void)
 	// ite(f,1,0) = f 	
 	CPPUNIT_ASSERT_EQUAL(man->ite(f,man->True(),man->False()),f);
 	// ite(f,0,1) = neg(f) 
-	CPPUNIT_ASSERT_EQUAL(man->ite(f,man->False(),man->True()),man->neg(f)); 
-	//Testing Recursive Cases:
-	
+	CPPUNIT_ASSERT_EQUAL(man->ite(f,man->False(),man->True()),man->neg(f));
 }
 
 void ManagerTest::and2Test(void)
 {
-  unsigned a=man->createVar("a");
+  	unsigned a=man->createVar("a");
   	unsigned b=man->createVar("b");
 	unsigned c=man->createVar("c");
   	unsigned f=man->and2(a,c);
@@ -322,17 +319,43 @@ void ManagerTest::findNodesTest(void)
 	unsigned a=man->createVar("a");
   	unsigned b=man->createVar("b");
 	unsigned c=man->createVar("c");
-  	unsigned f=man->and2(a,c);
+  	unsigned f=man->and2(a,b);
 	unsigned g=man->and2(b,c);
 	unsigned h=man->or2(f,g);
-	unsigned d=man->and2(a,b);
-	unsigned list={};
-	//man->printTable();
+
+	set<unsigned> list1;
+	man->findNodes(h,list1);
+	CPPUNIT_ASSERT(list1.size()==8);
+	CPPUNIT_ASSERT(list1.find(6)==list1.end());
+	CPPUNIT_ASSERT(list1.find(5)!=list1.end());
+
+	set<unsigned> list2;
+	man->findNodes(f,list2);
+	CPPUNIT_ASSERT(list2.size()==4);
+	CPPUNIT_ASSERT(list2.find(6)!=list2.end());
+	CPPUNIT_ASSERT(list2.find(5)==list2.end());
 }
   
 void ManagerTest::findVarsTest(void)
 {
-	
+	unsigned a=man->createVar("a");
+  	unsigned b=man->createVar("b");
+	unsigned c=man->createVar("c");
+  	unsigned f=man->and2(a,b);
+	unsigned g=man->and2(a,c);
+	unsigned h=man->or2(f,g);
+
+	set<size_t> list1;	
+	man->findVars(h,list1);
+	CPPUNIT_ASSERT(list1.size()==3);
+	CPPUNIT_ASSERT(list1.find((int)'c')!=list1.end());
+	CPPUNIT_ASSERT(list1.find((int)'v')==list1.end());
+
+	set<size_t> list2;
+	man->findVars(f,list2);
+	CPPUNIT_ASSERT(list2.size()==2);
+	CPPUNIT_ASSERT(list2.find((int)'c')==list2.end());
+	CPPUNIT_ASSERT(list2.find((int)'a')!=list2.end());
 }
 
 

@@ -326,34 +326,58 @@ string Manager::getTopVarName(const unsigned& f)
 				}
 			}
 	}
-	
 	return var;
 }
 
 
 void Manager::findNodes(const unsigned& f,set<unsigned>& list)
 {	
-	list.insert((unsigned)1);
-	list.insert((unsigned)2);
-	for(auto it=uniqueTable.begin();it != uniqueTable.end() ;it++)
-	{		
-		while(it->second <= f)
-		{
-			list.insert(it->second);
-		}
-	}	
+	unsigned id=f;
+	unsigned ll=min(coFactorTrue(id),coFactorFalse(id));
+	unsigned hh=max(coFactorTrue(id),coFactorFalse(id));
+	BDD_ID tmp(getTopVarName(id),coFactorFalse(id),coFactorTrue(id));
+	int count=0;
+	while (id>2)
+	{
+		for(auto itr=uniqueTable.begin();itr != uniqueTable.end();itr++)
+			{
+				if(itr->second==id)
+				{
+					list.insert(itr->second);
+					id=max(max(itr->first.low,itr->first.high),ll);
+					ll=max(min(itr->first.low,itr->first.high),ll);
+					if (id==ll)
+						ll=hh;
+					hh=min(min(itr->first.low,itr->first.high),ll);
+					count++;
+				}
+			}
+	}
+	list.insert(2); list.insert(1);
 }
 
 void Manager::findVars(const unsigned& f,set<size_t>& list)
-{
-	for(auto it=uniqueTable.begin();it != uniqueTable.end() ;it++)
-	{		
-		while(it->second <= f)
-		{
-			for (auto res=list.begin();res != list.end() ;res++)
-				if (res==list.end())
-					list.insert(it->first.var[0]);
-		}
+{	
+	unsigned id=f;
+	unsigned ll=min(coFactorTrue(id),coFactorFalse(id));
+	unsigned hh=max(coFactorTrue(id),coFactorFalse(id));
+	BDD_ID tmp(getTopVarName(id),coFactorFalse(id),coFactorTrue(id));
+	int count=0;
+	while (id>2)
+	{
+		for(auto itr=uniqueTable.begin();itr != uniqueTable.end();itr++)
+			{
+				if(itr->second==id)
+				{
+					list.insert(itr->first.var[0]);
+					id=max(max(itr->first.low,itr->first.high),ll);
+					ll=max(min(itr->first.low,itr->first.high),ll);
+					if (id==ll)
+						ll=hh;
+					hh=min(min(itr->first.low,itr->first.high),ll);
+					count++;
+				}
+			}
 	}
 }
 
