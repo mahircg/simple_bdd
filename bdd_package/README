@@ -1,0 +1,32 @@
+Setup
+
+The following instruction applies if intended to build a minimal BDD package in C++, that implements the fundamental manipulation methods for ROBDDS.
+
+Assumptions:
+* run on linux machine.
+* have scons installed.
+* have CppUnit installed.
+
+1.Build of static library
+
+* Hierarchical scons is used, at root directory there is an SConstruct which is looked by scons at beginning.
+* For each folder there is a SConscript defining how the code should be handled for compilation purposes.
+* Nested script calls are performed to cover all required folders.
+* To compile on the console in the root directory type: "scons".
+* To build on the console in the root directory type: "scons build".
+* To clean files produces during compilation type: "scons -c".
+* To compile and run the tests type: "scons test".
+
+2. Documentation
+
+* Doxygen is used to generate automatically documentation from comments included in the code.
+* In the directory "/doc" check configuration file "doxyConfigEx" to configure the desired values. Configuration file is well documented.
+* To run doxygen type on console from "/doc" folder: "doxygen doxyConfigEx".
+
+3. Testing
+
+* To perform uni testing testing framework CppUnit is used.
+* Code for unit testing is located in "/src/unittest", code defines the tests.
+* Code to execute the unit tests is located in "/test/testrunner.cpp".
+
+
